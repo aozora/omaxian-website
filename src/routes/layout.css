@@ -1,0 +1,63 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+/* ---- Omaxian brand base -------------------------------------------------- */
+/* Constellation identity: teal on deep space, drawn from the oma·X·ian
+   wordmark, the x-swirl mark, and the "init freedom" wallpaper. */
+
+:root {
+	--omx-void: #04090c; /* deepest ground */
+	--omx-plate: #071417; /* main surface */
+	--omx-plate-2: #050f12; /* recessed surface */
+	--omx-panel: #0c2128; /* raised panel / card */
+	--omx-bone: #eafffb; /* cyan-white — primary text */
+	--omx-mute: #8fd8cd; /* muted teal — secondary text, etymology */
+	--omx-accent: #5fe6d8; /* primary accent — the constellation glow */
+	--omx-accent-deep: #2f9e94;
+	--omx-line: #c8fff8; /* hairlines, the X strokes */
+	--omx-red: #d70a53; /* spark — Debian marker, swirl arm, warnings */
+
+	/* legacy alias — some rules still say --omx-red for a primary highlight */
+	--omx-sans:
+		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--omx-mono:
+		ui-monospace, 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Menlo', 'Consolas', monospace;
+	color-scheme: dark;
+}
+
+html {
+	background: var(--omx-void);
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	min-height: 100dvh;
+	/* transparent so a fixed z-index:-1 page backdrop (the wallpaper) shows;
+	   the html canvas already paints --omx-void behind everything */
+	background: transparent;
+	color: var(--omx-bone);
+	font-family: var(--omx-sans);
+	font-synthesis-weight: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+a {
+	color: inherit;
+}
+
+:focus-visible {
+	outline: 2px solid var(--omx-accent);
+	outline-offset: 3px;
+}
+
+::selection {
+	background: var(--omx-accent);
+	color: var(--omx-void);
+}
