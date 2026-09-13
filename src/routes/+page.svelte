@@ -3,6 +3,7 @@
 	// collapsed into a single scroll. /chiseled was retired outright.
 	import Mark from '#lib/Mark.svelte';
 	import GithubIcon from '#lib/GithubIcon.svelte';
+	import Lightbox from '#lib/Lightbox.svelte';
 	import { ALL_THEME_NAMES } from '#lib/themes';
 	import {
 		REPO,
@@ -15,11 +16,15 @@
 		COMMUNITY_PLUGINS,
 		COMMUNITY_PLUGINS_DIR,
 		INSTALL,
+		SHOTS,
 		NOT_1_1,
 		TESTED_ON,
 		UBUNTU_NOTE,
-		CREDITS
+		CREDITS,
+		type Shot
 	} from '#lib/omaxian';
+
+	let activeShot = $state<Shot | null>(null);
 
 	const BOOT: string[] = [
 		'booting session …',
@@ -216,6 +221,34 @@
 	</p>
 </section>
 
+<!-- ============ ON SCREEN ============ -->
+<section class="block">
+	<h2 class="rule">On screen</h2>
+	<div class="shots">
+		{#each SHOTS as s, i (s.src)}
+			<figure>
+				<button
+					type="button"
+					class="shot-btn"
+					onclick={() => (activeShot = s)}
+					aria-label={`Open ${s.label} screenshot`}
+				>
+					<img
+						src={s.src}
+						alt={s.label + ' — ' + s.desc}
+						width="1600"
+						height="1004"
+						loading={i === 0 ? 'eager' : 'lazy'}
+						decoding="async"
+						fetchpriority={i === 0 ? 'high' : 'auto'}
+					/>
+				</button>
+				<figcaption><b>{s.label}</b> — {s.desc}</figcaption>
+			</figure>
+		{/each}
+	</div>
+</section>
+
 <!-- ============ INSTALL ============ -->
 <section id="install" class="block">
 	<h2 class="rule">Install</h2>
@@ -266,6 +299,8 @@
 	<p class="copyright"># © 2026 Marcello Palmitessa</p>
 </footer>
 
+<Lightbox shot={activeShot} onclose={() => (activeShot = null)} />
+
 <style>
 	/* ---------- shared primitives ------------------------------------------ */
 	.block {
@@ -303,6 +338,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.8rem;
+		justify-content: center;
 	}
 	.btn {
 		display: inline-flex;
@@ -343,6 +379,12 @@
 		position: relative;
 		min-height: 100dvh;
 		display: grid;
+		/* an explicit minmax(0, 1fr) track, not the default auto one — an auto
+		   track sizes itself to its item's max-content width, and .hero-inner's
+		   max-content width is the banner's un-wrapped width (many hundreds of
+		   px). That circularity is what let the banner/tagline silently bleed
+		   past the viewport on narrow screens instead of wrapping/scrolling. */
+		grid-template-columns: minmax(0, 1fr);
 		place-items: center;
 		text-align: center;
 		padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem);
@@ -367,6 +409,12 @@
 		flex-direction: column;
 		align-items: center;
 		gap: clamp(1.25rem, 3vw, 2rem);
+		/* an explicit (not shrink-to-fit) width — otherwise this grid item sizes
+		   itself to the banner's un-wrapped max-content width (many hundreds of
+		   px at the 2x banner size) and everything else, incl. the tagline,
+		   inherits that oversized box and silently bleeds past the viewport
+		   under .hero's overflow:hidden instead of wrapping/scrolling */
+		width: 100%;
 		max-width: 64rem;
 	}
 	:global(.glyph) {
@@ -375,15 +423,26 @@
 	}
 	.banner-wrap {
 		max-width: 100%;
+		/* flex items don't shrink past their content's intrinsic width by
+		   default; without this, overflow-x below never gets the chance to
+		   engage and the banner just overflows the box instead of scrolling */
+		min-width: 0;
+		overflow-x: auto;
+		overflow-y: hidden;
 	}
 	.banner {
 		margin: 0;
 		color: var(--omx-accent);
 		font-family: var(--omx-mono);
-		font-size: clamp(0.68rem, 3.4vw, 1.4rem);
+		/* font-size: clamp(0.68rem, 3.4vw, 1.4rem); */
+		font-size: clamp(0.68rem, 1vw + 0.5rem, 1.4rem);
 		line-height: 1.05;
 		text-shadow: 0 0 22px color-mix(in srgb, var(--omx-accent) 45%, transparent);
 		white-space: pre;
+
+		@media (max-width: 480px) {
+			font-size: 2vw;
+		}
 	}
 	.banner .x {
 		color: var(--omx-red);
@@ -391,6 +450,7 @@
 	}
 	.tagline {
 		margin: 0;
+		max-width: 100%;
 		font-family: var(--omx-mono);
 		font-size: clamp(0.95rem, 2.2vw, 1.15rem);
 		color: var(--omx-mute);
@@ -596,6 +656,46 @@
 	}
 	.more-link a:hover {
 		text-decoration: none;
+	}
+
+	/* ---------- screenshot gallery ------------------------------------------- */
+	.shots {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+	.shots figure {
+		margin: 0;
+	}
+	.shot-btn {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: none;
+		cursor: zoom-in;
+		border-radius: 8px;
+	}
+	.shot-btn img {
+		width: 100%;
+		height: auto;
+		display: block;
+		border: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
+		border-radius: 8px;
+		background: var(--omx-plate-2);
+		transition: border-color 0.15s ease;
+	}
+	.shot-btn:hover img,
+	.shot-btn:focus-visible img {
+		border-color: var(--omx-accent);
+	}
+	.shots figcaption {
+		margin-top: 0.6rem;
+		font-size: 0.85rem;
+		color: color-mix(in srgb, var(--omx-bone) 62%, transparent);
+	}
+	.shots figcaption b {
+		color: var(--omx-bone);
 	}
 
 	/* ---------- install / caveats -------------------------------------------- */
