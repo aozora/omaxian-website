@@ -23,20 +23,22 @@
 
 	const BOOT: string[] = [
 		'booting session …',
-		'[  ok  ]  base:  Omarchy shell (upstream: DHH & 37signals)',
-		'[  ok  ]  elogind (loginctl) — no systemd, no uwsm',
-		'[  ok  ]  host:  omarchy-host (systemd | elogind | shutdown)',
-		'[  ok  ]  picom compositor',
-		'[  ok  ]  dunst notifications',
-		'[  ok  ]  quickshell:  bar · dock · osd',
-		'[  ok  ]  widgets:  workspaces clock media net weather tray sysstats vpn apt',
-		`[  ok  ]  themes:  ${ALL_THEME_NAMES.length} loaded   (Alt+Ctrl+T to switch, default: nebula-ridge)`,
-		`[  ok  ]  community plugins:  ${COMMUNITY_PLUGINS.length} available   (opt-in, ~/.config/omarchy/plugins/)`,
-		'[  ok  ]  omarchy-* commands linked into PATH',
+		'[  ok  ]  elogind session registered — no systemd, no uwsm',
+		'[  ok  ]  connected to i3 IPC socket',
+		'[  ok  ]  picom compositor started',
+		'[  ok  ]  dunst notification daemon started',
+		'starting quickshell (omarchy-shell) …',
+		'[  ok  ]  bar mounted: workspaces, clock, network, tray',
+		'[  ok  ]  widgets loaded: media (mpDris2), weather, sysstats, vpn, apt',
+		'[  ok  ]  dock mounted — 6 pinned',
+		'loading plugins from ~/.local/share/omarchy/shell/plugins …',
+		'[  ok  ]  37 first-party plugins registered',
+		'scanning ~/.config/omarchy/plugins (community, opt-in) …',
+		`[  ok  ]  ${COMMUNITY_PLUGINS.length} found, 0 enabled`,
+		`applying theme nebula-ridge (${ALL_THEME_NAMES.length} installed) …`,
+		'[  ok  ]  theme applied — Alt+Ctrl+T to switch',
 		'[  ok  ]  redshift night light armed',
-		`[  ok  ]  tested on:  ${TESTED_ON.join(' · ')}`,
-		'[ warn ]  X11 ≠ Wayland — partial parity with upstream Omarchy',
-		'[ warn ]  Ubuntu 26 dropped X11 — use Xubuntu',
+		'[  ok  ]  omarchy-* commands linked into PATH',
 		'session ready.'
 	];
 
@@ -144,7 +146,8 @@
 						class="line"
 						class:hdr={i === 0}
 						class:okline={line.startsWith('[  ok')}
-						class:warnline={line.startsWith('[ warn')}>{line}</span
+						class:warnline={line.startsWith('[ warn')}
+						class:pending={i !== 0 && !line.startsWith('[')}>{line}</span
 					>
 				{/each}{#if !booted}<span class="cursor" aria-hidden="true">█</span>{/if}
 			</div>
@@ -468,6 +471,10 @@
 	}
 	.log .warnline {
 		color: var(--omx-red);
+	}
+	.log .pending {
+		color: color-mix(in srgb, var(--omx-bone) 82%, transparent);
+		margin-top: 0.5rem;
 	}
 	.cursor {
 		position: relative;
