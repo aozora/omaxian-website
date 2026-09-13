@@ -65,14 +65,20 @@
 <style>
 	.lb {
 		/* explicit viewport centring — Tailwind Preflight resets the UA
-		   `dialog { margin: auto }` that would otherwise centre a modal */
+		   `dialog { margin: auto }` that would otherwise centre a modal.
+		   width/height stay auto (shrink-to-fit, via the auto margins above)
+		   so the box hugs the image instead of reserving a fixed 80vh even
+		   for images much shorter than that. */
 		position: fixed;
 		inset: 0;
 		margin: auto;
-		width: 80vw;
-		height: 80vh;
-		max-width: none;
-		max-height: none;
+		/* `auto` only shrink-wraps on the width axis (per the spec's absolute-
+		   positioning algorithm); height:auto instead stretches to fill the
+		   inset box, so `fit-content` is needed to hug the image vertically. */
+		width: 100%;
+		height: fit-content;
+		max-width: 90vw;
+		max-height: 90vh;
 		padding: 0;
 		border: 1px solid color-mix(in srgb, var(--omx-bone) 22%, transparent);
 		border-radius: 12px;
@@ -90,19 +96,24 @@
 
 	.lb-inner {
 		position: relative;
-		display: grid;
-		grid-template-rows: 1fr auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		gap: 0.75rem;
-		width: 100%;
-		height: 100%;
 		padding: 1.25rem;
+		max-width: calc(90vw - 2.5rem);
+		max-height: calc(90vh - 2.5rem);
+	}
+	.lb picture {
+		width: 100%;
 	}
 	.lb img {
-		min-height: 0;
+		display: block;
+		width: 100%;
+		height: auto;
 		max-width: 100%;
-		max-height: 100%;
-		margin: 0 auto;
-		object-fit: contain;
+		max-height: calc(90vh - 2.5rem - 2rem);
+		object-fit: cover;
 		border-radius: 6px;
 	}
 	.lb-cap {
@@ -161,8 +172,15 @@
 
 	@media (max-width: 640px) {
 		.lb {
-			width: 94vw;
-			height: 88vh;
+			max-width: 94vw;
+			max-height: 88vh;
+		}
+		.lb-inner {
+			max-width: calc(94vw - 2.5rem);
+			max-height: calc(88vh - 2.5rem);
+		}
+		.lb img {
+			max-height: calc(88vh - 2.5rem - 2rem);
 		}
 	}
 </style>
