@@ -126,7 +126,7 @@
 			<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
 				<GithubIcon class="gh-icon" /> Get it on GitHub
 			</a>
-			<a class="btn ghost" href="#install">Read the install</a>
+			<a class="btn ghost" href="#install">How to install</a>
 		</div>
 	</div>
 </section>
@@ -244,8 +244,8 @@
 		Omaxian tracks the Omarchy shell, but X11 / XLibre is not Wayland and i3 is not Hyprland — so
 		parity is partial by design.
 	</p>
-	<ul class="caveats">
-		{#each NOT_1_1 as c (c)}<li>{c}</li>{/each}
+	<ul class="caveats list-disc">
+		{#each NOT_1_1 as c (c)}<li class="break-all">{c}</li>{/each}
 	</ul>
 </section>
 
@@ -353,15 +353,12 @@
 		inset: 0;
 		z-index: -1;
 		background:
-			radial-gradient(
-				60% 50% at 50% 0%,
-				color-mix(in srgb, var(--omx-accent) 5%, transparent),
-				transparent 65%
-			),
-			linear-gradient(
-				var(--omx-void),
-				color-mix(in srgb, var(--omx-void) 78%, transparent) 55%,
-				var(--omx-void)
+			repeating-linear-gradient(
+				to bottom,
+				rgba(255, 255, 255, 0.035) 0,
+				rgba(255, 255, 255, 0.035) 1px,
+				transparent 1px,
+				transparent 3px
 			),
 			url('/wallpaper-bg.svg') center / cover no-repeat var(--omx-void);
 	}

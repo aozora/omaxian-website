@@ -18,10 +18,11 @@
 	--omx-line: #c8fff8; /* hairlines, the X strokes */
 	--omx-red: #d70a53; /* secondary accent / spark — the X, warnings, callouts */
 
-	--omx-sans:
-		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	/* JetBrains Mono first — loaded via Google Fonts in app.html — with system
+	   monospace stacks as fallback while it loads (or if it fails to). The
+	   whole site is set in this one family; there is no separate sans stack. */
 	--omx-mono:
-		ui-monospace, 'JetBrains Mono', 'Cascadia Code', 'SF Mono', 'Menlo', 'Consolas', monospace;
+		'JetBrains Mono', ui-monospace, 'Cascadia Code', 'SF Mono', 'Menlo', 'Consolas', monospace;
 	color-scheme: dark;
 }
 
@@ -37,7 +38,7 @@ body {
 	   the html canvas already paints --omx-void behind everything */
 	background: transparent;
 	color: var(--omx-bone);
-	font-family: var(--omx-sans);
+	font-family: var(--omx-mono);
 	font-synthesis-weight: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;

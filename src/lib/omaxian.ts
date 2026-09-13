@@ -7,7 +7,7 @@ export const OMARCHY = 'https://omarchy.org';
 export const QUICKSHELL = 'https://quickshell.org';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
 
-export const TAGLINE = 'A port of the Omarchy shell to X11 / XLibre + i3';
+export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X11 / XLibre + i3';
 
 // The name, spelled out. omakase (Omarchy's ethos) + X11 + Debian.
 export const ETYMOLOGY = 'omakase + x11 + debian';
