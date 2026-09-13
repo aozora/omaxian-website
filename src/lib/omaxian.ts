@@ -3,6 +3,7 @@
 // with the upstream repo's last week of changes (2026-09-06 .. 2026-09-13).
 
 export const REPO = 'https://github.com/aozora/omaxian';
+export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
 export const OMARCHY = 'https://omarchy.org';
 export const QUICKSHELL = 'https://quickshell.org';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
@@ -168,29 +169,51 @@ export interface Shot {
 }
 
 export const SHOTS: Shot[] = [
-	{ src: '/shots/menu.webp', label: 'Menu', desc: 'Apps and omarchy-* commands in one launcher.' },
-	{ src: '/shots/media.webp', label: 'Media', desc: 'MPD alongside every MPRIS player.' },
 	{
-		src: '/shots/weather.webp',
+		src: '/src/lib/assets/shots/menu-nebula-ridge.png',
+		label: 'Menu',
+		desc: 'Apps and omarchy-* commands in one launcher. Theme: Nebula Ridge.'
+	},
+	{
+		src: '/src/lib/assets/shots/media-everforest.png',
+		label: 'Media',
+		desc: 'MPD alongside every MPRIS player. Theme: Everforest.'
+	},
+	{
+		src: '/src/lib/assets/shots/weather-matte-black.png',
 		label: 'Weather',
-		desc: 'Forecast popup straight from the bar widget.'
+		desc: 'Forecast popup straight from the bar widget. Theme: Matte Black.'
 	},
 	{
-		src: '/shots/settings.webp',
+		src: '/src/lib/assets/shots/settings-miasma.png',
 		label: 'Settings',
-		desc: 'Bar, dock, widgets and startup apps — no text editor needed.'
+		desc: 'Bar, dock, widgets and startup apps — no text editor needed. Theme: Miasma.'
 	},
 	{
-		src: '/shots/key-bindings.webp',
+		src: '/src/lib/assets/shots/key-bindings-retro82.png',
 		label: 'Key bindings',
-		desc: 'Super+K cheat-sheet of this session’s binds.'
+		desc: 'Super+K cheat-sheet of this session’s binds. Theme: Retro 82.'
 	},
 	{
-		src: '/shots/control-panel.webp',
+		src: '/src/lib/assets/shots/control-panel-catpuccin.png',
 		label: 'Control Panel',
-		desc: 'Audio, Bluetooth, wallpaper, theme and monitors.'
+		desc: 'Audio, Bluetooth, wallpaper, theme and monitors. Theme: Catppuccin.'
 	},
-	{ src: '/shots/power-menu.webp', label: 'Power menu', desc: 'Lock, suspend, reboot, shut down.' }
+	{
+		src: '/src/lib/assets/shots/calendar-lupine.png',
+		label: 'Calendar',
+		desc: 'Calendar widget. Theme: Lupine.'
+	},
+	{
+		src: '/src/lib/assets/shots/network-hackerman.png',
+		label: 'Network',
+		desc: 'Network widget. Theme: Hackerman.'
+	},
+	{
+		src: '/src/lib/assets/shots/power-menu-vantablack.png',
+		label: 'Power menu',
+		desc: 'Lock, suspend, reboot, shut down. Theme: Vantablack.'
+	}
 ];
 
 export const NOT_1_1: string[] = [

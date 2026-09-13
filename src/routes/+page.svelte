@@ -5,8 +5,10 @@
 	import GithubIcon from '#lib/GithubIcon.svelte';
 	import Lightbox from '#lib/Lightbox.svelte';
 	import { ALL_THEME_NAMES } from '#lib/themes';
+	import type { Picture } from 'vite-imagetools';
 	import {
 		REPO,
+		LATEST_RELEASE,
 		OMARCHY,
 		TAGLINE,
 		PITCH,
@@ -25,6 +27,14 @@
 	} from '#lib/omaxian';
 
 	let activeShot = $state<Shot | null>(null);
+
+	// Screenshots live in src/lib/assets so enhanced:img can optimize them;
+	// this glob resolves each Shot.src path to its compiled Picture object.
+	const shotImages = import.meta.glob<Picture>('/src/lib/assets/shots/*.{png,webp}', {
+		eager: true,
+		query: { enhanced: true },
+		import: 'default'
+	});
 
 	const BOOT: string[] = [
 		'booting session …',
@@ -128,7 +138,7 @@
 		<p class="tagline">{TAGLINE}</p>
 
 		<div class="cta">
-			<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
+			<a class="btn primary" href={LATEST_RELEASE} target="_blank" rel="noreferrer">
 				<GithubIcon class="gh-icon" /> Get it on GitHub
 			</a>
 			<a class="btn ghost" href="#install">How to install</a>
@@ -233,11 +243,10 @@
 					onclick={() => (activeShot = s)}
 					aria-label={`Open ${s.label} screenshot`}
 				>
-					<img
-						src={s.src}
+					<enhanced:img
+						src={shotImages[s.src]}
 						alt={s.label + ' — ' + s.desc}
-						width="1600"
-						height="1004"
+						sizes="(max-width: 767px) 100vw, 767px"
 						loading={i === 0 ? 'eager' : 'lazy'}
 						decoding="async"
 						fetchpriority={i === 0 ? 'high' : 'auto'}
@@ -299,7 +308,11 @@
 	<p class="copyright"># © 2026 Marcello Palmitessa</p>
 </footer>
 
-<Lightbox shot={activeShot} onclose={() => (activeShot = null)} />
+<Lightbox
+	shot={activeShot}
+	image={activeShot ? shotImages[activeShot.src] : undefined}
+	onclose={() => (activeShot = null)}
+/>
 
 <style>
 	/* ---------- shared primitives ------------------------------------------ */
@@ -677,8 +690,13 @@
 		border-radius: 8px;
 	}
 	.shot-btn img {
+		/* the source screenshots aren't quite the same aspect ratio (903–1004px
+		   tall at 1600 wide) — crop them to one fixed box so every thumbnail in
+		   the grid lines up, regardless of row length or source dimensions */
 		width: 100%;
-		height: auto;
+		aspect-ratio: 8 / 5;
+		object-fit: cover;
+		object-position: top;
 		display: block;
 		border: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
 		border-radius: 8px;

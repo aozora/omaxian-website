@@ -1,8 +1,14 @@
 <script lang="ts">
 	import type { Shot } from '#lib/omaxian';
+	import type { Picture } from 'vite-imagetools';
 
-	// Controlled: parent passes the shot to show (or null), and a close callback.
-	let { shot = null, onclose }: { shot?: Shot | null; onclose: () => void } = $props();
+	// Controlled: parent passes the shot to show (or null), its resolved
+	// enhanced:img Picture, and a close callback.
+	let {
+		shot = null,
+		image = undefined,
+		onclose
+	}: { shot?: Shot | null; image?: Picture; onclose: () => void } = $props();
 
 	let dialog = $state<HTMLDialogElement | null>(null);
 
@@ -41,12 +47,16 @@
 	{onclose}
 	onclick={onBackdropClick}
 >
-	{#if shot}
+	{#if shot && image}
 		<div class="lb-inner">
 			<button type="button" class="lb-close" onclick={() => dialog?.close()} aria-label="Close">
 				✕
 			</button>
-			<img src={shot.src} alt={`${shot.label} — ${shot.desc}`} width="1600" height="1004" />
+			<enhanced:img
+				src={image}
+				alt={`${shot.label} — ${shot.desc}`}
+				sizes="(max-width: 767px) 100vw, 767px"
+			/>
 			<p class="lb-cap"><b>{shot.label}</b> — {shot.desc}</p>
 		</div>
 	{/if}
