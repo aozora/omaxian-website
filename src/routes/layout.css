@@ -16,9 +16,8 @@
 	--omx-accent: #5fe6d8; /* primary accent — the constellation glow */
 	--omx-accent-deep: #2f9e94;
 	--omx-line: #c8fff8; /* hairlines, the X strokes */
-	--omx-red: #d70a53; /* spark — Debian marker, swirl arm, warnings */
+	--omx-red: #d70a53; /* secondary accent / spark — the X, warnings, callouts */
 
-	/* legacy alias — some rules still say --omx-red for a primary highlight */
 	--omx-sans:
 		ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	--omx-mono:
