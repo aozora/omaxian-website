@@ -267,7 +267,7 @@
 						<button
 							type="button"
 							class="shot-btn"
-							onclick={() => openScreenshot(s)}
+							onclick={() => (activeShot = s)}
 							aria-label={`Open ${s.label} screenshot`}
 						>
 							<enhanced:img
@@ -755,6 +755,7 @@
 	.shots {
 		margin: 0 auto;
 		max-width: 52rem;
+
 		display: grid;
 		gap: 1.5rem;
 		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
