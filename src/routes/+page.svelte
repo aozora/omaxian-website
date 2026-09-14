@@ -198,7 +198,7 @@
 
 	<!-- ============ ABOUT (pitch · scope · attribution) ============ -->
 	<section class="about">
-		<div class="block-centered">
+		<div class="about-inner block-centered">
 			<h2 class="rule">About</h2>
 			<p class="pitch">{PITCH}</p>
 			<p class="scope">{SCOPE}</p>
@@ -261,7 +261,7 @@
 
 	<!-- ============ ON SCREEN ============ -->
 	<section class="gallery">
-		<div class="block-centered">
+		<div class="gallery-inner block-centered">
 			<h2 class="rule">On screen</h2>
 			<div class="shots">
 				{#each SHOTS as s, i (s.src)}
@@ -368,10 +368,6 @@
 		> .full-bleed {
 			width: 100%;
 			grid-column: 1 / -1;
-		}
-
-		@media (min-width: 48em) {
-			grid-template-columns: 40px minmax(auto, 1216px) 40px;
 		}
 
 		@media (min-width: 90em) {
@@ -645,6 +641,8 @@
 	/* ---------- about -------------------------------------------------------- */
 	.about {
 		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
 		border-top: 0;
 		background:
 			repeating-linear-gradient(
@@ -656,6 +654,10 @@
 			),
 			var(--omx-galaxy-darker-blue);
 	}
+	.about-inner {
+		grid-column: 2;
+	}
+
 	.pitch {
 		margin: 0 0 0.9rem;
 		max-width: 46rem;
@@ -768,6 +770,8 @@
 	/* ---------- screenshot gallery ------------------------------------------- */
 	.gallery {
 		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
 		border-top: 0;
 		background:
 			repeating-linear-gradient(
@@ -778,6 +782,9 @@
 				transparent 3px
 			),
 			var(--omx-galaxy-dark-blue);
+	}
+	.gallery-inner {
+		grid-column: 2;
 	}
 	.shots {
 		display: grid;
