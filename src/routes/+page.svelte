@@ -5,7 +5,9 @@
 	import GithubIcon from '#lib/GithubIcon.svelte';
 	import Lightbox from '#lib/Lightbox.svelte';
 	import { ALL_THEME_NAMES } from '#lib/themes';
+	import { env } from '$env/dynamic/public';
 	import type { Picture } from 'vite-imagetools';
+	import posthog from 'posthog-js';
 	import {
 		REPO,
 		LATEST_RELEASE,
@@ -26,6 +28,8 @@
 		type Shot
 	} from '#lib/omaxian';
 
+	const posthogConfigured = env.PUBLIC_POSTHOG_PROJECT_TOKEN && env.PUBLIC_POSTHOG_HOST;
+
 	let activeShot = $state<Shot | null>(null);
 
 	// Screenshots live in src/lib/assets so enhanced:img can optimize them;
@@ -44,7 +48,7 @@
 		'[  ok  ]  dunst notification daemon started',
 		'starting quickshell (omarchy-shell) …',
 		'[  ok  ]  bar mounted: workspaces, clock, network, tray',
-		'[  ok  ]  widgets loaded: media (mpDris2), weather, sysstats, vpn, apt',
+		'[  ok  ]  widgets loaded: media, weather, sysstats, vpn, apt',
 		'[  ok  ]  dock mounted — 6 pinned',
 		'loading plugins from ~/.local/share/omarchy/shell/plugins …',
 		'[  ok  ]  37 first-party plugins registered',
@@ -100,10 +104,20 @@
 		return () => clearInterval(id);
 	});
 
+	function openScreenshot(shot: Shot) {
+		activeShot = shot;
+		if (posthogConfigured) {
+			posthog.capture('screenshot_viewed', { screenshot_label: shot.label });
+		}
+	}
+
 	let copied = $state(false);
 	async function copyInstall() {
 		try {
 			await navigator.clipboard.writeText(INSTALL.join('\n'));
+			if (posthogConfigured) {
+				posthog.capture('installation_instructions_copied');
+			}
 			copied = true;
 			setTimeout(() => (copied = false), 1600);
 		} catch {
@@ -120,207 +134,250 @@
 	/>
 </svelte:head>
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-	<div class="hero-bg" aria-hidden="true"></div>
-	<div class="hero-inner">
-		<Mark class="glyph" title="Omaxian" />
+<main id="main">
+	<!-- ============ HERO ============ -->
+	<section class="hero full-bleed">
+		<div class="hero-bg" aria-hidden="true"></div>
+		<div class="hero-inner">
+			<Mark class="glyph" title="Omaxian" />
 
-		<div class="banner-wrap">
-			<!-- prettier-ignore -->
-			<pre class="banner" role="img" aria-label="OMAXIAN"> ██████  ███    ███  █████  <span class="x">██   ██</span> ██  █████  ███    ██
+			<div class="banner-wrap">
+				<!-- prettier-ignore -->
+				<pre class="banner" role="img" aria-label="OMAXIAN"> ██████  ███    ███  █████  <span class="x">██   ██</span> ██  █████  ███    ██
 ██    ██ ████  ████ ██   ██ <span class="x"> ██ ██ </span> ██ ██   ██ ████   ██
 ██    ██ ██ ████ ██ ███████ <span class="x">  ███  </span> ██ ███████ ██ ██  ██
 ██    ██ ██  ██  ██ ██   ██ <span class="x"> ██ ██ </span> ██ ██   ██ ██  ██ ██
  ██████  ██      ██ ██   ██ <span class="x">██   ██</span> ██ ██   ██ ██   ████</pre>
-		</div>
+			</div>
 
-		<p class="tagline">{TAGLINE}</p>
+			<p class="tagline">{TAGLINE}</p>
 
-		<div class="cta">
-			<a class="btn primary" href={LATEST_RELEASE} target="_blank" rel="noreferrer">
-				<GithubIcon class="gh-icon" /> Get it on GitHub
-			</a>
-			<a class="btn ghost" href="#install">How to install</a>
-		</div>
-	</div>
-</section>
-
-<!-- ============ BOOT LOG (boxed terminal) ============ -->
-<section class="term-section block">
-	<div class="term-shell" bind:this={termEl}>
-		<div class="term-chrome">
-			<span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-			<span class="term-name">omaxian@linux: booting session</span>
-		</div>
-		<div class="term-screen">
-			<div class="term-scan" aria-hidden="true"></div>
-			<div class="log" aria-label="boot log">
-				{#each BOOT.slice(0, shown) as line, i (i)}
-					<span
-						class="line"
-						class:hdr={i === 0}
-						class:okline={line.startsWith('[  ok')}
-						class:warnline={line.startsWith('[ warn')}
-						class:pending={i !== 0 && !line.startsWith('[')}>{line}</span
-					>
-				{/each}{#if !booted}<span class="cursor" aria-hidden="true">█</span>{/if}
+			<div class="cta">
+				<a
+					class="btn primary"
+					href={LATEST_RELEASE}
+					target="_blank"
+					rel="noreferrer"
+					onclick={() => {
+						if (posthogConfigured) posthog.capture('github_release_opened');
+					}}
+				>
+					<GithubIcon class="gh-icon" /> Get it on GitHub
+				</a>
+				<a class="btn ghost" href="#install">How to install</a>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<!-- ============ ABOUT (pitch · scope · attribution) ============ -->
-<section class="block">
-	<h2 class="rule">About</h2>
-	<p class="pitch">{PITCH}</p>
-	<p class="scope">{SCOPE}</p>
-	<p class="attribution">
-		{ATTRIBUTION}
-		<a href={OMARCHY} target="_blank" rel="noreferrer">omarchy.org</a>
-	</p>
-</section>
-
-<!-- ============ WHAT IT ADDS ============ -->
-<section class="block" id="adds">
-	<h2 class="rule">What Omaxian adds</h2>
-	<p class="lede">
-		Not just a backend swap. These pieces have no upstream counterpart — they exist because X11 / i3
-		/ Debian needed them, or because a GUI was missing.
-	</p>
-	<ul class="feats">
-		{#each FEATURES as f (f.title)}
-			<li>
-				<span class="bullet">▸</span>
-				<div>
-					<b>{f.title}</b>{#if f.key}<span class="key">{f.key}</span>{/if}
-					<span class="desc">{f.blurb}</span>
+	<!-- ============ BOOT LOG (boxed terminal) ============ -->
+	<section class="term-section">
+		<!-- <div class="term-bg" aria-hidden="true"></div> -->
+		<div class="block">
+			<div class="term-shell" bind:this={termEl}>
+				<div class="term-chrome">
+					<span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+					<span class="term-name">omaxian@linux: booting session</span>
 				</div>
-			</li>
-		{/each}
-	</ul>
-</section>
-
-<!-- ============ COMMUNITY PLUGINS ============ -->
-<section class="block">
-	<h2 class="rule">Community plugins</h2>
-	<p class="lede">
-		Opt-in, third-party shell ports live in <code>community-plugins/</code> — never installed by
-		<code>deploy.sh</code>.
-	</p>
-	<ul class="feats">
-		{#each COMMUNITY_PLUGINS as p (p.id)}
-			<li>
-				<span class="bullet">▸</span>
-				<div>
-					<b><a href={p.href} target="_blank" rel="noreferrer">{p.label}</a></b>
-					<span class="desc">{p.blurb} <code>{p.id}</code></span>
+				<div class="term-screen">
+					<div class="term-scan" aria-hidden="true"></div>
+					<div class="log" aria-label="boot log">
+						{#each BOOT.slice(0, shown) as line, i (i)}
+							<span
+								class="line"
+								class:hdr={i === 0}
+								class:okline={line.startsWith('[  ok')}
+								class:warnline={line.startsWith('[ warn')}
+								class:pending={i !== 0 && !line.startsWith('[')}>{line}</span
+							>
+						{/each}{#if !booted}<span class="cursor" aria-hidden="true">█</span>{/if}
+					</div>
 				</div>
-			</li>
-		{/each}
-	</ul>
-	<p class="callout">
-		More plugins can join this list. Run <code>omarchy-plugin-check</code> against any other Omarchy community
-		plugin first — a clean pass means it already works as-is; flagged Wayland / Hyprland / PipeWire /
-		systemd couplings just mean it needs a quick port before it's ready.
-	</p>
-	<p class="more-link">
-		<a href={COMMUNITY_PLUGINS_DIR} target="_blank" rel="noreferrer">
-			<GithubIcon class="gh-icon" /> Browse community-plugins/ →
-		</a>
-	</p>
-</section>
-
-<!-- ============ ON SCREEN ============ -->
-<section class="block">
-	<h2 class="rule">On screen</h2>
-	<div class="shots">
-		{#each SHOTS as s, i (s.src)}
-			<figure>
-				<button
-					type="button"
-					class="shot-btn"
-					onclick={() => (activeShot = s)}
-					aria-label={`Open ${s.label} screenshot`}
-				>
-					<enhanced:img
-						src={shotImages[s.src]}
-						alt={s.label + ' — ' + s.desc}
-						sizes="(max-width: 767px) 100vw, 767px"
-						loading={i === 0 ? 'eager' : 'lazy'}
-						decoding="async"
-						fetchpriority={i === 0 ? 'high' : 'auto'}
-					/>
-				</button>
-				<figcaption><b>{s.label}</b> — {s.desc}</figcaption>
-			</figure>
-		{/each}
-	</div>
-</section>
-
-<!-- ============ INSTALL ============ -->
-<section id="install" class="block">
-	<h2 class="rule">Install</h2>
-	<p class="lede">
-		You need an X11 session with i3 and a login path that runs <code>/etc/X11/Xsession</code>
-		(most display managers do; <code>startx</code> with a proper <code>.xsession</code> also works).
-		Then log out and back in — not <code>i3 restart</code>.
-	</p>
-	<p class="tested">Regularly tested against <b>{TESTED_ON.join(', ')}</b>.</p>
-	<p class="tested note">{UBUNTU_NOTE}</p>
-	<div class="term">
-		<div class="term-top">
-			<span>~/projects</span>
-			<button type="button" onclick={copyInstall}>{copied ? 'copied ✓' : 'copy'}</button>
+			</div>
 		</div>
-		<div class="term-body">
-			{#each INSTALL as line (line)}<span class="ln">{line}</span>{/each}
+	</section>
+
+	<!-- ============ ABOUT (pitch · scope · attribution) ============ -->
+	<section class="block">
+		<h2 class="rule">About</h2>
+		<p class="pitch">{PITCH}</p>
+		<p class="scope">{SCOPE}</p>
+		<p class="attribution">
+			{ATTRIBUTION}
+			<a href={OMARCHY} target="_blank" rel="noreferrer">omarchy.org</a>
+		</p>
+	</section>
+
+	<!-- ============ WHAT IT ADDS ============ -->
+	<section class="block" id="adds">
+		<h2 class="rule">What Omaxian adds</h2>
+		<p class="lede">
+			Not just a backend swap. These pieces have no upstream counterpart — they exist because X11 /
+			i3 / Debian needed them, or because a GUI was missing.
+		</p>
+		<ul class="feats">
+			{#each FEATURES as f (f.title)}
+				<li>
+					<span class="bullet">▸</span>
+					<div>
+						<b>{f.title}</b>{#if f.key}<span class="key">{f.key}</span>{/if}
+						<span class="desc">{f.blurb}</span>
+					</div>
+				</li>
+			{/each}
+		</ul>
+	</section>
+
+	<!-- ============ COMMUNITY PLUGINS ============ -->
+	<section class="block">
+		<h2 class="rule">Community plugins</h2>
+		<p class="lede">
+			Opt-in, third-party shell ports live in <code>community-plugins/</code> — never installed by
+			<code>deploy.sh</code>.
+		</p>
+		<ul class="feats">
+			{#each COMMUNITY_PLUGINS as p (p.id)}
+				<li>
+					<span class="bullet">▸</span>
+					<div>
+						<b><a href={p.href} target="_blank" rel="noreferrer">{p.label}</a></b>
+						<span class="desc">{p.blurb} <code>{p.id}</code></span>
+					</div>
+				</li>
+			{/each}
+		</ul>
+		<p class="callout">
+			More plugins can join this list. Run <code>omarchy-plugin-check</code> against any other Omarchy
+			community plugin first — a clean pass means it already works as-is; flagged Wayland / Hyprland /
+			PipeWire / systemd couplings just mean it needs a quick port before it's ready.
+		</p>
+		<p class="more-link">
+			<a href={COMMUNITY_PLUGINS_DIR} target="_blank" rel="noreferrer">
+				<GithubIcon class="gh-icon" /> Browse community-plugins/ →
+			</a>
+		</p>
+	</section>
+
+	<!-- ============ ON SCREEN ============ -->
+	<section class="gallery">
+		<div class="block">
+			<h2 class="rule">On screen</h2>
+			<div class="shots">
+				{#each SHOTS as s, i (s.src)}
+					<figure>
+						<button
+							type="button"
+							class="shot-btn"
+							onclick={() => openScreenshot(s)}
+							aria-label={`Open ${s.label} screenshot`}
+						>
+							<enhanced:img
+								src={shotImages[s.src]}
+								alt={s.label + ' — ' + s.desc}
+								sizes="(max-width: 767px) 100vw, 767px"
+								loading={i === 0 ? 'eager' : 'lazy'}
+								decoding="async"
+								fetchpriority={i === 0 ? 'high' : 'auto'}
+							/>
+						</button>
+						<figcaption><b>{s.label}</b> — {s.desc}</figcaption>
+					</figure>
+				{/each}
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<!-- ============ NOT 1:1 ============ -->
-<section class="block">
-	<h2 class="rule">Where it is not 1:1 with Omarchy</h2>
-	<p class="lede">
-		Omaxian tracks the Omarchy shell, but X11 / XLibre is not Wayland and i3 is not Hyprland — so
-		parity is partial by design.
-	</p>
-	<ul class="caveats list-disc">
-		{#each NOT_1_1 as c (c)}<li class="break-all">{c}</li>{/each}
-	</ul>
-</section>
+	<!-- ============ INSTALL ============ -->
+	<section id="install" class="block">
+		<h2 class="rule">Install</h2>
+		<p class="lede">
+			You need an X11 session with i3 and a login path that runs <code>/etc/X11/Xsession</code>
+			(most display managers do; <code>startx</code> with a proper <code>.xsession</code> also
+			works). Then log out and back in — not <code>i3 restart</code>.
+		</p>
+		<p class="tested">Regularly tested against <b>{TESTED_ON.join(', ')}</b>.</p>
+		<p class="tested note">{UBUNTU_NOTE}</p>
+		<div class="term">
+			<div class="term-top">
+				<span>~/projects</span>
+				<button type="button" onclick={copyInstall}>{copied ? 'copied ✓' : 'copy'}</button>
+			</div>
+			<div class="term-body">
+				{#each INSTALL as line (line)}<span class="ln">{line}</span>{/each}
+			</div>
+		</div>
+	</section>
 
-<!-- ============ FOOT ============ -->
-<footer class="foot">
-	<div class="foot-log">
-		<span>marcello@omaxian:~$ cat CREDITS</span>
-		<span>&nbsp;</span>
-		{#each CREDITS as c (c.label)}<span># {c.label} — {c.by}</span>{/each}
-		<span>&nbsp;</span>
-		<span>marcello@omaxian:~$ logout</span>
-	</div>
-	<div class="cta foot-cta">
-		<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
-			<GithubIcon class="gh-icon" /> github.com/aozora/omaxian
-		</a>
-	</div>
-	<p class="copyright"># © 2026 Marcello Palmitessa</p>
-</footer>
+	<!-- ============ NOT 1:1 ============ -->
+	<section class="block">
+		<h2 class="rule">Where it is not 1:1 with Omarchy</h2>
+		<p class="lede">
+			Omaxian tracks the Omarchy shell, but X11 / XLibre is not Wayland and i3 is not Hyprland — so
+			parity is partial by design.
+		</p>
+		<ul class="caveats list-disc">
+			{#each NOT_1_1 as c (c)}<li class="break-all">{c}</li>{/each}
+		</ul>
+	</section>
 
-<Lightbox
-	shot={activeShot}
-	image={activeShot ? shotImages[activeShot.src] : undefined}
-	onclose={() => (activeShot = null)}
-/>
+	<!-- ============ FOOT ============ -->
+	<footer class="foot">
+		<div class="foot-log">
+			<span>marcello@omaxian:~$ cat CREDITS</span>
+			<span>&nbsp;</span>
+			{#each CREDITS as c (c.label)}<span># {c.label} — {c.by}</span>{/each}
+			<span>&nbsp;</span>
+			<span>marcello@omaxian:~$ logout</span>
+		</div>
+		<div class="cta foot-cta">
+			<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
+				<GithubIcon class="gh-icon" /> github.com/aozora/omaxian
+			</a>
+		</div>
+		<p class="copyright"># © 2026 Marcello Palmitessa</p>
+	</footer>
 
-<style>
+	<Lightbox
+		shot={activeShot}
+		image={activeShot ? shotImages[activeShot.src] : undefined}
+		onclose={() => (activeShot = null)}
+	/>
+</main>
+
+<style lang="scss">
+	main {
+		z-index: 0;
+		overflow-x: clip;
+		position: relative;
+		display: grid;
+		grid-template-columns: var(--spacing-20) 1fr var(--spacing-20);
+		justify-content: center;
+		min-height: calc(90vh);
+		min-height: calc(90dvh);
+
+		> * {
+			grid-column: 2;
+		}
+
+		> .full-bleed {
+			width: 100%;
+			grid-column: 1 / -1;
+		}
+
+		@media (min-width: 48em) {
+			grid-template-columns: var(--spacing-40) minmax(auto, 1216px) var(--spacing-40);
+		}
+
+		@media (min-width: 90em) {
+			grid-template-columns: 1fr minmax(auto, 1216px) 1fr;
+		}
+	}
+
 	/* ---------- shared primitives ------------------------------------------ */
 	.block {
-		max-width: 74rem;
-		margin: 0 auto;
+		/* max-width: 74rem; */
+		/* margin: 0 auto; */
 		padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
-		border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent);
+		/* border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent); */
 	}
 	.rule {
 		margin: 0 0 1.4rem;
@@ -472,7 +529,17 @@
 
 	/* ---------- boxed boot-log terminal ------------------------------------ */
 	.term-section {
+		grid-column: 1 / -1;
 		border-top: 0;
+		background:
+			repeating-linear-gradient(
+				to bottom,
+				rgba(255, 255, 255, 0.035) 0,
+				rgba(255, 255, 255, 0.035) 1px,
+				transparent 1px,
+				transparent 3px
+			),
+			var(--omx-galaxy-darkest-blue);
 	}
 	.term-shell {
 		max-width: 52rem;
@@ -672,7 +739,22 @@
 	}
 
 	/* ---------- screenshot gallery ------------------------------------------- */
+	.gallery {
+		grid-column: 1 / -1;
+		border-top: 0;
+		background:
+			repeating-linear-gradient(
+				to bottom,
+				rgba(255, 255, 255, 0.035) 0,
+				rgba(255, 255, 255, 0.035) 1px,
+				transparent 1px,
+				transparent 3px
+			),
+			var(--omx-galaxy-dark-blue);
+	}
 	.shots {
+		margin: 0 auto;
+		max-width: 52rem;
 		display: grid;
 		gap: 1.5rem;
 		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));

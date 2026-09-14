@@ -29,6 +29,7 @@
 		"prettier": "^3.9.6",
 		"prettier-plugin-svelte": "^4.1.1",
 		"prettier-plugin-tailwindcss": "^0.8.1",
+		"sass": "^1.104.1",
 		"svelte": "^5.57.0",
 		"svelte-check": "^4.7.6",
 		"tailwindcss": "^4.3.3",
@@ -42,6 +43,7 @@
 		"#lib/*": "./src/lib/*"
 	},
 	"dependencies": {
-		"@sveltejs/enhanced-img": "^0.11.0"
+		"@sveltejs/enhanced-img": "^0.11.0",
+		"posthog-js": "^1.430.3"
 	}
 }
