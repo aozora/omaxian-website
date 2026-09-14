@@ -5,7 +5,7 @@
 	import GithubIcon from '#lib/GithubIcon.svelte';
 	import Lightbox from '#lib/Lightbox.svelte';
 	import { ALL_THEME_NAMES } from '#lib/themes';
-	import { env } from '$env/dynamic/public';
+	import { PUBLIC_POSTHOG_PROJECT_TOKEN, PUBLIC_POSTHOG_HOST } from '$app/env/public';
 	import type { Picture } from 'vite-imagetools';
 	import posthog from 'posthog-js';
 	import {
@@ -28,7 +28,7 @@
 		type Shot
 	} from '#lib/omaxian';
 
-	const posthogConfigured = env.PUBLIC_POSTHOG_PROJECT_TOKEN && env.PUBLIC_POSTHOG_HOST;
+	const posthogConfigured = PUBLIC_POSTHOG_PROJECT_TOKEN && PUBLIC_POSTHOG_HOST;
 
 	let activeShot = $state<Shot | null>(null);
 
@@ -197,21 +197,23 @@
 	</section>
 
 	<!-- ============ ABOUT (pitch · scope · attribution) ============ -->
-	<section class="block">
-		<h2 class="rule">About</h2>
-		<p class="pitch">{PITCH}</p>
-		<p class="scope">{SCOPE}</p>
-		<p class="attribution">
-			{ATTRIBUTION}
-			<a href={OMARCHY} target="_blank" rel="noreferrer">omarchy.org</a>
-		</p>
+	<section class="about">
+		<div class="block-centered">
+			<h2 class="rule">About</h2>
+			<p class="pitch">{PITCH}</p>
+			<p class="scope">{SCOPE}</p>
+			<p class="attribution">
+				{ATTRIBUTION}
+				<a href={OMARCHY} target="_blank" rel="noreferrer">omarchy.org</a>
+			</p>
+		</div>
 	</section>
 
 	<!-- ============ WHAT IT ADDS ============ -->
-	<section class="block" id="adds">
+	<section class="block-centered" id="adds">
 		<h2 class="rule">What Omaxian adds</h2>
 		<p class="lede">
-			Not just a backend swap. These pieces have no upstream counterpart — they exist because X11 /
+			Not just a backend swap. Most pieces have no upstream counterpart — they exist because X11 /
 			i3 / Debian needed them, or because a GUI was missing.
 		</p>
 		<ul class="feats">
@@ -228,7 +230,7 @@
 	</section>
 
 	<!-- ============ COMMUNITY PLUGINS ============ -->
-	<section class="block">
+	<section class="block-centered">
 		<h2 class="rule">Community plugins</h2>
 		<p class="lede">
 			Opt-in, third-party shell ports live in <code>community-plugins/</code> — never installed by
@@ -259,7 +261,7 @@
 
 	<!-- ============ ON SCREEN ============ -->
 	<section class="gallery">
-		<div class="block">
+		<div class="block-centered">
 			<h2 class="rule">On screen</h2>
 			<div class="shots">
 				{#each SHOTS as s, i (s.src)}
@@ -287,7 +289,7 @@
 	</section>
 
 	<!-- ============ INSTALL ============ -->
-	<section id="install" class="block">
+	<section id="install" class="block-centered">
 		<h2 class="rule">Install</h2>
 		<p class="lede">
 			You need an X11 session with i3 and a login path that runs <code>/etc/X11/Xsession</code>
@@ -308,7 +310,7 @@
 	</section>
 
 	<!-- ============ NOT 1:1 ============ -->
-	<section class="block">
+	<section class="block-centered">
 		<h2 class="rule">Where it is not 1:1 with Omarchy</h2>
 		<p class="lede">
 			Omaxian tracks the Omarchy shell, but X11 / XLibre is not Wayland and i3 is not Hyprland — so
@@ -321,19 +323,24 @@
 
 	<!-- ============ FOOT ============ -->
 	<footer class="foot">
-		<div class="foot-log">
-			<span>marcello@omaxian:~$ cat CREDITS</span>
+		<div class="foot-log block-centered">
+			<span>omaxian@linux:~$ cat CREDITS</span>
 			<span>&nbsp;</span>
-			{#each CREDITS as c (c.label)}<span># {c.label} — {c.by}</span>{/each}
+			{#each CREDITS as c (c.label)}
+				<div>
+					<a href={c.href} target="_blank" rel="noreferrer"># {c.label}</a>
+					<span> — {c.by}</span>
+				</div>
+			{/each}
 			<span>&nbsp;</span>
-			<span>marcello@omaxian:~$ logout</span>
+			<span>omaxian@linux:~$ logout</span>
+			<div class="foot-cta">
+				<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
+					<GithubIcon class="gh-icon" /> github.com/aozora/omaxian
+				</a>
+			</div>
+			<p class="copyright"># © 2026 Marcello Palmitessa</p>
 		</div>
-		<div class="cta foot-cta">
-			<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
-				<GithubIcon class="gh-icon" /> github.com/aozora/omaxian
-			</a>
-		</div>
-		<p class="copyright"># © 2026 Marcello Palmitessa</p>
 	</footer>
 
 	<Lightbox
@@ -349,7 +356,7 @@
 		overflow-x: clip;
 		position: relative;
 		display: grid;
-		grid-template-columns: var(--spacing-20) 1fr var(--spacing-20);
+		grid-template-columns: 20px 1fr 20px;
 		justify-content: center;
 		min-height: calc(90vh);
 		min-height: calc(90dvh);
@@ -364,7 +371,7 @@
 		}
 
 		@media (min-width: 48em) {
-			grid-template-columns: var(--spacing-40) minmax(auto, 1216px) var(--spacing-40);
+			grid-template-columns: 40px minmax(auto, 1216px) 40px;
 		}
 
 		@media (min-width: 90em) {
@@ -376,6 +383,13 @@
 	.block {
 		/* max-width: 74rem; */
 		/* margin: 0 auto; */
+		padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
+		/* border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent); */
+	}
+	.block-centered {
+		width: 100%;
+		max-width: 74rem;
+		margin: 0 auto;
 		padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
 		/* border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent); */
 	}
@@ -629,6 +643,19 @@
 	}
 
 	/* ---------- about -------------------------------------------------------- */
+	.about {
+		grid-column: 1 / -1;
+		border-top: 0;
+		background:
+			repeating-linear-gradient(
+				to bottom,
+				rgba(255, 255, 255, 0.035) 0,
+				rgba(255, 255, 255, 0.035) 1px,
+				transparent 1px,
+				transparent 3px
+			),
+			var(--omx-galaxy-darker-blue);
+	}
 	.pitch {
 		margin: 0 0 0.9rem;
 		max-width: 46rem;
@@ -753,9 +780,6 @@
 			var(--omx-galaxy-dark-blue);
 	}
 	.shots {
-		margin: 0 auto;
-		max-width: 52rem;
-
 		display: grid;
 		gap: 1.5rem;
 		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -876,23 +900,29 @@
 
 	/* ---------- footer -------------------------------------------------------- */
 	.foot {
-		max-width: 74rem;
-		margin: 0 auto;
-		padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem) 4rem;
+		/* max-width: 74rem;
+		margin: 0 auto; */
+		/* padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem) 4rem; */
 		border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent);
 	}
 	.foot-log {
-		margin: 0 0 1.6rem;
+		/* margin: 0 0 1.6rem; */
 		font-family: var(--omx-mono);
 		font-size: 0.85rem;
 		color: color-mix(in srgb, var(--omx-bone) 62%, transparent);
 	}
-	.foot-log span {
+	.foot-log div,
+	.foot-log > span {
 		display: block;
 		white-space: pre-wrap;
 	}
+	.foot-log a {
+		/* display: block; */
+		white-space: pre-wrap;
+		text-decoration: underline;
+	}
 	.foot-cta {
-		margin-bottom: 1.2rem;
+		margin: 1.2rem 0;
 	}
 	.copyright {
 		margin: 0;

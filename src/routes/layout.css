@@ -17,8 +17,9 @@
 	--omx-accent-deep: #2f9e94;
 	--omx-line: #c8fff8; /* hairlines, the X strokes */
 	--omx-red: #d70a53; /* secondary accent / spark — the X, warnings, callouts */
-	--omx-galaxy-blue: #313682;
-	--omx-galaxy-dark-blue: #2d1848;
+	--omx-galaxy-blue: #343480;
+	--omx-galaxy-dark-blue: #2d1747;
+	--omx-galaxy-darker-blue: #190c2d;
 	--omx-galaxy-darkest-blue: #0b0616;
 
 	/* JetBrains Mono first — loaded via Google Fonts in app.html — with system
