@@ -126,14 +126,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Omaxian — a port of the Omarchy shell</title>
-	<meta
-		name="description"
-		content="Omaxian ports the Omarchy shell — bar, dock, menu, themes and omarchy-* commands — to X11 / XLibre and i3 on the Debian family. The shell only, not a distribution."
-	/>
-</svelte:head>
-
 <main id="main">
 	<!-- ============ HERO ============ -->
 	<section class="hero full-bleed">
@@ -166,6 +158,17 @@
 				</a>
 				<a class="btn ghost" href="#install">How to install</a>
 			</div>
+
+			<iframe
+				width="560"
+				height="315"
+				src="https://www.youtube.com/embed/-JV9oh1XsAU?si=6Tl6SACcEIaEhbGo"
+				title="YouTube video player"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				referrerpolicy="strict-origin-when-cross-origin"
+				allowfullscreen
+			></iframe>
 		</div>
 	</section>
 
