@@ -1,6 +1,6 @@
 // Shared content for the Omaxian landing pages.
 // Sourced from the project README (github.com/aozora/omaxian), kept in sync
-// with the upstream repo's last week of changes (2026-09-06 .. 2026-09-13).
+// with the upstream repo (community-plugins catalog as of 2026-10-07).
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
@@ -75,7 +75,7 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Community plugins',
 		blurb:
-			'Curated third-party ports — weather, disposable alarms, email — install opt-in under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
+			'Curated third-party ports — weather, radar, calculator, KeePass, email and more — install opt-in under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
 	},
 	{
 		title: 'SysStats · VPN · apt',
@@ -110,32 +110,88 @@ export interface CommunityPlugin {
 // community-plugins/ — opt-in, third-party ports. Not installed by deploy.sh.
 export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 	{
-		id: 'io.github.guiestrela.weather',
-		label: 'Better Weather',
-		upstream: 'guiestrela/weather',
-		href: 'https://github.com/guiestrela/weather',
-		blurb: 'Open-Meteo, wttr.in and RainViewer forecasts on the bar. QML compatible as-is.'
-	},
-	{
-		id: 'jmaeder.swissweather',
-		label: 'Swiss Weather',
-		upstream: 'jmaeder/omarchy-swissweather',
-		href: 'https://github.com/jmaeder/omarchy-swissweather',
-		blurb: 'MeteoSwiss bar weather for Switzerland. QML compatible as-is.'
-	},
-	{
 		id: 'jankeesvw.nag',
 		label: 'Nag',
 		upstream: 'jankeesvw/omarchy-nag',
 		href: 'https://github.com/jankeesvw/omarchy-nag',
-		blurb: 'Disposable alarms — calendar user timers become a wall-clock sleeper.'
+		blurb: 'Disposable alarms — type a wall-clock time and the bar counts down to it.'
+	},
+	{
+		id: 'io.github.guiestrela.weather',
+		label: 'Better Weather',
+		upstream: 'guiestrela/weather',
+		href: 'https://github.com/guiestrela/weather',
+		blurb: 'Open-Meteo, wttr.in and RainViewer forecasts on the bar.'
+	},
+	{
+		id: 'io.github.kaiizu.runcat',
+		label: 'Running Cat',
+		upstream: 'kaiizu/runningcat',
+		href: 'https://github.com/kaiizu/runningcat',
+		blurb: 'RunCat-style CPU cat on the bar — runs with load, sleeps when idle.'
+	},
+	{
+		id: 'harshith.system-monitor',
+		label: 'System Monitor',
+		upstream: 'Harshith292002/omarchy-system-monitor',
+		href: 'https://github.com/Harshith292002/omarchy-system-monitor',
+		blurb: 'Low-overhead /proc and /sys dashboard with btop launch from the bar.'
+	},
+	{
+		id: 'mkelk.keepass-picker',
+		label: 'KeePass Picker',
+		upstream: 'mkelk/keepass-picker',
+		href: 'https://github.com/mkelk/keepass-picker',
+		blurb: 'Search a KeePass database and paste a credential into the focused window.'
+	},
+	{
+		id: 'omaxian-speaker-pulseaudio-calibrator',
+		label: 'Speaker Calibrator (PulseAudio)',
+		upstream: 'thefreshoffice/omarchy-speaker-calibrator',
+		href: 'https://github.com/thefreshoffice/omarchy-speaker-calibrator',
+		blurb: 'Microphone-driven parametric speaker tuning for PulseAudio.'
+	},
+	{
+		id: 'omaxian-speaker-pipewire-calibrator',
+		label: 'Speaker Calibrator (PipeWire)',
+		upstream: 'thefreshoffice/omarchy-speaker-calibrator',
+		href: 'https://github.com/thefreshoffice/omarchy-speaker-calibrator',
+		blurb: 'Microphone-driven parametric speaker tuning for PipeWire.'
 	},
 	{
 		id: 'omamail',
 		label: 'Omamail',
 		upstream: 'huacnlee/omamail',
 		href: 'https://github.com/huacnlee/omamail',
-		blurb: 'Gmail / HEY / JMAP / IMAP email client with a Rust backend, v0.9.0.'
+		blurb: 'Gmail / HEY / JMAP / IMAP email client with a Rust backend.'
+	},
+	{
+		id: 'io.github.adamcbrewer.voxtype-aura',
+		label: 'Voxtype Aura',
+		upstream: 'adamcbrewer/voxtype-aura',
+		href: 'https://github.com/adamcbrewer/voxtype-aura',
+		blurb: 'Theme-aware Voxtype dictation overlay for the shell.'
+	},
+	{
+		id: 'io.github.canclini.calculator',
+		label: 'Calculator',
+		upstream: 'canclini/omarchy-calculator',
+		href: 'https://github.com/canclini/omarchy-calculator',
+		blurb: 'Spotlight-style quick calculator — result as you type, Enter copies it.'
+	},
+	{
+		id: 'com.omastorm.radar',
+		label: 'Omastorm',
+		upstream: 'wesleygrimes/omastorm',
+		href: 'https://github.com/wesleygrimes/omastorm',
+		blurb: 'Live NEXRAD / OPERA weather radar in a native shell window.'
+	},
+	{
+		id: 'io.github.kristoferlund.webcam',
+		label: 'Webcam Controls',
+		upstream: 'kristoferlund/omarchy-webcam',
+		href: 'https://github.com/kristoferlund/omarchy-webcam',
+		blurb: 'V4L2 webcam preview and device controls from the bar.'
 	}
 ];
 
