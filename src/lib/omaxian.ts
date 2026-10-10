@@ -75,7 +75,7 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Community plugins',
 		blurb:
-			'Curated third-party ports — weather, radar, calculator, KeePass, email and more — install opt-in under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
+			'Curated third-party ports — weather, radar, calculator, email and more — install opt-in under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
 	},
 	{
 		title: 'SysStats · VPN · apt',
@@ -136,13 +136,6 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		upstream: 'Harshith292002/omarchy-system-monitor',
 		href: 'https://github.com/Harshith292002/omarchy-system-monitor',
 		blurb: 'Low-overhead /proc and /sys dashboard with btop launch from the bar.'
-	},
-	{
-		id: 'mkelk.keepass-picker',
-		label: 'KeePass Picker',
-		upstream: 'mkelk/keepass-picker',
-		href: 'https://github.com/mkelk/keepass-picker',
-		blurb: 'Search a KeePass database and paste a credential into the focused window.'
 	},
 	{
 		id: 'omaxian-speaker-pulseaudio-calibrator',
