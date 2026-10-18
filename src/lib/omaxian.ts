@@ -1,12 +1,16 @@
 // Shared content for the Omaxian landing pages.
-// Sourced from the project README (github.com/aozora/omaxian), kept in sync
-// with the upstream repo (community-plugins catalog as of 2026-10-07).
+// Sourced from github.com/aozora/omaxian (README, install-scripts.md,
+// community-plugins/README.md). Last synced: 2026-10-18.
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
 export const OMARCHY = 'https://omarchy.org';
 export const QUICKSHELL = 'https://quickshell.org';
+export const QUICKSHELL_INSTALL = 'https://quickshell.org/docs/guide/install/';
+export const QUICKSHELL_UBUNTU =
+	'https://quickshell.org/docs/v0.3.0/guide/install-setup/#ubuntu';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
+export const INSTALL_SCRIPTS_DOC = `${REPO}/blob/main/docs/omaxian/install-scripts.md`;
 
 export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X11 / XLibre + i3';
 
@@ -14,7 +18,7 @@ export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X
 export const ETYMOLOGY = 'omakase + x11 + debian';
 
 export const PITCH =
-	'Omaxian brings the Omarchy shell — its bar, dock, menu, themes and omarchy-* commands — to the Debian family on X11 / XLibre and i3, with no Wayland, no Hyprland and no systemd.';
+	'Omaxian brings the Omarchy shell — its bar, dock, menu, themes and omarchy-* commands — to the Debian family on X11 / XLibre and i3, with no Wayland, no Hyprland and no dependency on systemd or other init systems.';
 
 // The important caveat: this is the shell, not the OS, and X11 ≠ Wayland.
 export const SCOPE =
@@ -30,6 +34,9 @@ export const TESTED_ON: string[] = ['Debian 13', 'Devuan Excalibur', 'Xubuntu 26
 // Ubuntu 26.04 dropped X11 outright, so "Ubuntu" alone no longer works.
 export const UBUNTU_NOTE =
 	'Stock Ubuntu 26.04 shipped with X11 removed entirely — install Xubuntu instead, or add it to Ubuntu with `sudo apt install xubuntu-desktop`.';
+
+export const UBUNTU_QUICKSHELL_NOTE =
+	'For Quickshell on Ubuntu, follow the Quickshell Ubuntu install guide (Omaxian still needs X11 — Xubuntu or xubuntu-desktop).';
 
 export interface Feature {
 	title: string;
@@ -48,7 +55,7 @@ export const FEATURES: Feature[] = [
 		title: 'Settings',
 		key: 'Super+Ctrl+S',
 		blurb:
-			'A real window to edit bar layout, dock chrome, plugins, fonts and startup apps — including a new dual-pane, drag-and-drop editor for arranging bar widgets.'
+			'A real window to edit bar layout, dock chrome, plugins, fonts and startup apps — including a dual-pane arrange UI for bar widgets (Omarchy’s on-bar drag gestures are not ported).'
 	},
 	{
 		title: 'Floating island bar',
@@ -58,7 +65,7 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Dock',
 		blurb:
-			'A persistent bottom dock: pinned apps, running-app dots, hover magnification. First-party, not a plugin.'
+			'A persistent bottom dock: pinned apps, running-app dots, hover magnification. First-party here; upstream’s dock is a separate community plugin.'
 	},
 	{
 		title: 'Display profiles',
@@ -67,15 +74,14 @@ export const FEATURES: Feature[] = [
 			'xrandr resolution / on / off / primary / position, with layouts saved per output topology and laptop-lid handling.'
 	},
 	{
-		title: 'Lock screen',
-		key: 'Super+Ctrl+L',
-		blurb:
-			'i3lock-omaxian with screenshot / image / random backgrounds and blur, plus optional idle auto-lock via xss-lock and xset.'
-	},
-	{
 		title: 'Community plugins',
 		blurb:
-			'Curated third-party ports — weather, radar, calculator, email and more — install opt-in under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
+			'Curated third-party ports — weather, radar, calculator, email and more — install opt-in via the omaxian-install.sh TUI or install-community-plugins.sh under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
+	},
+	{
+		title: 'omarchy-plugin-check',
+		blurb:
+			'Static check of a community plugin against this X11 port (Wayland / Hyprland / PipeWire / systemd couplings). Upstream only has schema validation.'
 	},
 	{
 		title: 'SysStats · VPN · apt',
@@ -93,7 +99,7 @@ export const FEATURES: Feature[] = [
 		blurb: 'The “?” widget: a cheat-sheet of this session’s i3 binds, always one key away.'
 	},
 	{
-		title: 'Cross-distro session',
+		title: 'Debian / Devuan session',
 		blurb:
 			'omarchy-host picks systemd, elogind or plain shutdown(8) at runtime, so the same power/session commands work on Debian, Devuan and Ubuntu. PulseAudio or PipeWire; apt instead of pacman; redshift for night light.'
 	}
@@ -107,7 +113,8 @@ export interface CommunityPlugin {
 	blurb: string;
 }
 
-// community-plugins/ — opt-in, third-party ports. Not installed by deploy.sh.
+// Opt-in; not installed by scripts/setup.sh, install.sh, or deploy.sh.
+// Install via omaxian-install.sh TUI or scripts/install-community-plugins.sh.
 export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 	{
 		id: 'jankeesvw.nag',
@@ -136,6 +143,13 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		upstream: 'Harshith292002/omarchy-system-monitor',
 		href: 'https://github.com/Harshith292002/omarchy-system-monitor',
 		blurb: 'Low-overhead /proc and /sys dashboard with btop launch from the bar.'
+	},
+	{
+		id: 'josh2c.protonpass',
+		label: 'Proton Pass',
+		upstream: 'josh2c/omarchy-protonpass',
+		href: 'https://github.com/josh2c/omarchy-protonpass',
+		blurb: 'Proton Pass search and copy via pass-cli — username, password, or TOTP from the bar.'
 	},
 	{
 		id: 'omaxian-speaker-pulseaudio-calibrator',
@@ -185,6 +199,13 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		upstream: 'kristoferlund/omarchy-webcam',
 		href: 'https://github.com/kristoferlund/omarchy-webcam',
 		blurb: 'V4L2 webcam preview and device controls from the bar.'
+	},
+	{
+		id: 'alexzeitler.ytdlp',
+		label: 'yt-dlp',
+		upstream: 'AlexZeitler/omarchy-yt-dlp-plugin',
+		href: 'https://github.com/AlexZeitler/omarchy-yt-dlp-plugin',
+		blurb: 'Download queue for yt-dlp — paste a link, pick video or audio, run from the bar.'
 	}
 ];
 
@@ -203,13 +224,39 @@ export const KEYBINDINGS: [string, string][] = [
 	['Super+Alt+arrows', 'move window to adjacent monitor']
 ];
 
-export const INSTALL: string[] = [
-	'git clone https://github.com/aozora/omaxian ~/projects/omaxian',
-	'cd ~/projects/omaxian',
-	'sudo ./setup.sh          # packages, fonts, session D-Bus',
-	'./install.sh             # themes + omarchy-* commands',
-	'./deploy.sh              # i3 / Quickshell / ~/.xsessionrc'
+/** One-shot curl|bash entry (recommended). */
+export const INSTALL_ONESHOT: string[] = [
+	'curl -fsSL https://raw.githubusercontent.com/aozora/omaxian/main/bootstrap.sh | bash'
 ];
+
+/** After cloning: TUI installer (and noninteractive flag). */
+export const INSTALL_CLONE: string[] = [
+	'git clone https://github.com/aozora/omaxian.git ~/projects/omaxian',
+	'cd ~/projects/omaxian',
+	'./omaxian-install.sh'
+];
+
+/** Noninteractive desktop-only install (no community plugins). */
+export const INSTALL_NONINTERACTIVE = './omaxian-install.sh --yes';
+
+/** Advanced / re-run path under scripts/. */
+export const INSTALL_ADVANCED: string[] = [
+	'sudo ./scripts/setup.sh          # packages, fonts, session D-Bus',
+	'./scripts/install.sh             # themes + omarchy-* commands',
+	'./scripts/deploy.sh              # i3 / Quickshell / ~/.xsessionrc'
+];
+
+/** Back-compat alias used by older copy helpers — prefers the one-shot. */
+export const INSTALL: string[] = INSTALL_ONESHOT;
+
+export const INSTALL_AFTER: string[] = [
+	'omarchy-shell shell ping                 # → ok',
+	'omarchy-shell shell listPlugins | jq length   # → ~37',
+	'pgrep -x quickshell                      # one process'
+];
+
+export const QUICKSHELL_NOTE =
+	'The shell needs Quickshell ≥ 0.2 (0.3.x tested). Debian 13+ can apt install quickshell. On Debian < 13 / Devuan it is often only in testing (Forky / Freia) — setup.sh warns and skips it; pin testing or build from source.';
 
 export interface Shot {
 	src: string;
@@ -267,10 +314,17 @@ export const SHOTS: Shot[] = [
 
 export const NOT_1_1: string[] = [
 	'Click-outside does not always close a popup — a widget anchored to the bar may stay open if you click into another window. Close it with Escape, the same widget, or the same keybind.',
-	'No dimming overlay. Full-screen Omarchy scrims would go black under picom; panels are small popups instead.',
+	'Lock screen is i3lock-omaxian, not Omarchy’s Wayland session-lock plugin. Settings → Lock screen sets screenshot / image / random backgrounds, blur, and optional idle auto-lock via xss-lock + xset. Manual lock: Super+Ctrl+L. No in-shell password UI or fingerprint PAM.',
+	'No dimming overlay. Full-screen Omarchy scrims would go black under picom; panels are small popups instead. Escape dismisses them.',
 	'The bar cannot be dragged to another screen or reordered by dragging widgets — you edit it in Settings.',
+	'Display panel is layout only (resolution, on/off, position). Omarchy’s brightness / fractional-scale panel is not ported — use brightness keys.',
+	'Audio panel has no input VU meter; per-app rows show the raw app name.',
+	'No Omarchy clipboard history, image carousel, agents, or built-in notification daemon — notifications stay on dunst. Theme picking is a thumbnail grid. The menu skips Arch Install/Remove trees and Hyprland-only actions. Emoji picker, OCR/QR capture, LocalSend share, and screen recording are ported; webcam overlay and dictation are not.',
+	'Screen recording uses Flatpak com.dec05eba.gpu_screen_recorder (or gpu-screen-recorder on PATH) with an X11 region picker (slop).',
+	'Share uses LocalSend (Flatpak org.localsend.localsend_app or a native localsend binary).',
 	'There is no uwsm; commands fall back to ${OMARCHY_PATH:=$HOME/.local/share/omarchy}.',
 	'Reminders use sleep, not systemd timers. Night light is redshift, not hyprsunset.',
+	'i3 restart is not a full reload. Log out and back in after the first deploy, or run omarchy-restart-shell.',
 	'It is the same shell running on X11/i3 — not a Hyprland session.'
 ];
 

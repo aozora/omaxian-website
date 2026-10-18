@@ -19,7 +19,16 @@
 		FEATURES,
 		COMMUNITY_PLUGINS,
 		COMMUNITY_PLUGINS_DIR,
-		INSTALL,
+		INSTALL_ONESHOT,
+		INSTALL_CLONE,
+		INSTALL_NONINTERACTIVE,
+		INSTALL_ADVANCED,
+		INSTALL_AFTER,
+		QUICKSHELL_NOTE,
+		QUICKSHELL_INSTALL,
+		QUICKSHELL_UBUNTU,
+		INSTALL_SCRIPTS_DOC,
+		UBUNTU_QUICKSHELL_NOTE,
 		SHOTS,
 		NOT_1_1,
 		TESTED_ON,
@@ -112,16 +121,29 @@
 	}
 
 	let copied = $state(false);
+	let copiedAdvanced = $state(false);
 	async function copyInstall() {
 		try {
-			await navigator.clipboard.writeText(INSTALL.join('\n'));
+			await navigator.clipboard.writeText(INSTALL_ONESHOT.join('\n'));
 			if (posthogConfigured) {
-				posthog.capture('installation_instructions_copied');
+				posthog.capture('installation_instructions_copied', { kind: 'oneshot' });
 			}
 			copied = true;
 			setTimeout(() => (copied = false), 1600);
 		} catch {
 			copied = false;
+		}
+	}
+	async function copyAdvanced() {
+		try {
+			await navigator.clipboard.writeText(INSTALL_ADVANCED.join('\n'));
+			if (posthogConfigured) {
+				posthog.capture('installation_instructions_copied', { kind: 'advanced' });
+			}
+			copiedAdvanced = true;
+			setTimeout(() => (copiedAdvanced = false), 1600);
+		} catch {
+			copiedAdvanced = false;
 		}
 	}
 </script>
@@ -236,8 +258,9 @@
 	<section class="block-centered">
 		<h2 class="rule">Community plugins</h2>
 		<p class="lede">
-			Opt-in, third-party shell ports live in <code>community-plugins/</code> — never installed by
-			<code>deploy.sh</code>.
+			Opt-in third-party ports live in <code>community-plugins/</code> — not part of the default
+			desktop (<code>scripts/setup.sh</code>, <code>install.sh</code>, <code>deploy.sh</code>).
+			During <code>./omaxian-install.sh</code> you can select ports after the desktop phases.
 		</p>
 		<ul class="feats">
 			{#each COMMUNITY_PLUGINS as p (p.id)}
@@ -301,13 +324,65 @@
 		</p>
 		<p class="tested">Regularly tested against <b>{TESTED_ON.join(', ')}</b>.</p>
 		<p class="tested note">{UBUNTU_NOTE}</p>
+		<p class="tested note">
+			{UBUNTU_QUICKSHELL_NOTE}
+			<a href={QUICKSHELL_UBUNTU} target="_blank" rel="noreferrer">Quickshell Ubuntu guide →</a>
+		</p>
+
+		<h3 class="subrule">One-shot (recommended)</h3>
+		<p class="lede compact">
+			From a machine with <code>curl</code> and <code>git</code> (or let the bootstrap install
+			<code>git</code>). The TUI (whiptail) runs system packages → themes/bin → home configs,
+			verifies Quickshell, then optionally lets you pick community plugins.
+		</p>
 		<div class="term">
 			<div class="term-top">
-				<span>~/projects</span>
+				<span>bootstrap</span>
 				<button type="button" onclick={copyInstall}>{copied ? 'copied ✓' : 'copy'}</button>
 			</div>
 			<div class="term-body">
-				{#each INSTALL as line (line)}<span class="ln">{line}</span>{/each}
+				{#each INSTALL_ONESHOT as line (line)}<span class="ln">{line}</span>{/each}
+			</div>
+		</div>
+
+		<h3 class="subrule">From a clone</h3>
+		<div class="term">
+			<div class="term-top"><span>~/projects/omaxian</span></div>
+			<div class="term-body">
+				{#each INSTALL_CLONE as line (line)}<span class="ln">{line}</span>{/each}
+				<span class="ln comment"># noninteractive desktop only, no plugins:</span>
+				<span class="ln">{INSTALL_NONINTERACTIVE}</span>
+			</div>
+		</div>
+
+		<h3 class="subrule">Advanced / re-run</h3>
+		<p class="lede compact">
+			The three scripts under <code>scripts/</code> stay separate. Root
+			<code>./setup.sh</code> / <code>./install.sh</code> / <code>./deploy.sh</code> are thin
+			shims.
+			<a href={INSTALL_SCRIPTS_DOC} target="_blank" rel="noreferrer">install-scripts.md →</a>
+		</p>
+		<div class="term">
+			<div class="term-top">
+				<span>scripts/</span>
+				<button type="button" onclick={copyAdvanced}>{copiedAdvanced ? 'copied ✓' : 'copy'}</button>
+			</div>
+			<div class="term-body">
+				{#each INSTALL_ADVANCED as line (line)}<span class="ln">{line}</span>{/each}
+			</div>
+		</div>
+
+		<h3 class="subrule">Quickshell</h3>
+		<p class="lede compact">
+			{QUICKSHELL_NOTE}
+			<a href={QUICKSHELL_INSTALL} target="_blank" rel="noreferrer">Build from source →</a>
+		</p>
+
+		<h3 class="subrule">After install</h3>
+		<div class="term">
+			<div class="term-top"><span>smoke check</span></div>
+			<div class="term-body">
+				{#each INSTALL_AFTER as line (line)}<span class="ln">{line}</span>{/each}
 			</div>
 		</div>
 	</section>
@@ -407,6 +482,21 @@
 		font-size: 1.05rem;
 		line-height: 1.65;
 		color: color-mix(in srgb, var(--omx-bone) 72%, transparent);
+	}
+	.subrule {
+		margin: 2rem 0 0.75rem;
+		font-size: 1.05rem;
+		font-weight: 650;
+		letter-spacing: -0.01em;
+		color: var(--omx-bone);
+	}
+	.lede.compact {
+		margin-bottom: 1rem;
+		font-size: 0.95rem;
+	}
+	.lede.compact a,
+	.tested.note a {
+		color: var(--omx-accent);
 	}
 	code {
 		font-family: var(--omx-mono);
@@ -894,6 +984,13 @@
 	.term-body .ln::before {
 		content: '$ ';
 		color: var(--omx-accent);
+	}
+	.term-body .ln.comment,
+	.term-body .ln.comment::before {
+		color: color-mix(in srgb, var(--omx-bone) 45%, transparent);
+	}
+	.term-body .ln.comment::before {
+		content: '';
 	}
 
 	.caveats {
