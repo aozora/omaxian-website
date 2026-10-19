@@ -7,22 +7,16 @@ export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest
 export const OMARCHY = 'https://omarchy.org';
 export const QUICKSHELL = 'https://quickshell.org';
 export const QUICKSHELL_INSTALL = 'https://quickshell.org/docs/guide/install/';
-export const QUICKSHELL_UBUNTU =
-	'https://quickshell.org/docs/v0.3.0/guide/install-setup/#ubuntu';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
-export const INSTALL_SCRIPTS_DOC = `${REPO}/blob/main/docs/omaxian/install-scripts.md`;
 
 export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X11 / XLibre + i3';
-
-// The name, spelled out. omakase (Omarchy's ethos) + X11 + Debian.
-export const ETYMOLOGY = 'omakase + x11 + debian';
 
 export const PITCH =
 	'Omaxian brings the Omarchy shell — its bar, dock, menu, themes and omarchy-* commands — to the Debian family on X11 / XLibre and i3, with no Wayland, no Hyprland and no dependency on systemd or other init systems.';
 
-// The important caveat: this is the shell, not the OS, and X11 ≠ Wayland.
+// The important caveat, kept to one line: this is the shell, not the OS.
 export const SCOPE =
-	'It is not a distribution. Omarchy is a complete Arch-based system; Omaxian ports only its shell. Because X11 / XLibre and Wayland differ deeply, the two are only partially compatible — some Hyprland-era pieces work differently here, and a few not at all.';
+	'Not a distribution — it ports only the shell, and X11 differs from Wayland, so compatibility with Omarchy is partial.';
 
 // Prominent credit to the upstream project.
 export const ATTRIBUTION =
@@ -33,10 +27,12 @@ export const TESTED_ON: string[] = ['Debian 13', 'Devuan Excalibur', 'Xubuntu 26
 
 // Ubuntu 26.04 dropped X11 outright, so "Ubuntu" alone no longer works.
 export const UBUNTU_NOTE =
-	'Stock Ubuntu 26.04 shipped with X11 removed entirely — install Xubuntu instead, or add it to Ubuntu with `sudo apt install xubuntu-desktop`.';
+	'Stock Ubuntu 26.04 ships without X11 — use Xubuntu, or `sudo apt install xubuntu-desktop`.';
 
-export const UBUNTU_QUICKSHELL_NOTE =
-	'For Quickshell on Ubuntu, follow the Quickshell Ubuntu install guide (Omaxian still needs X11 — Xubuntu or xubuntu-desktop).';
+export const REQUIREMENTS = 'An X11 session with i3. Log out and back in after installing.';
+
+/** Full docs, install variants, community plugins and caveats live in the repo. */
+export const DOCS = `${REPO}/tree/main/docs/omaxian`;
 
 export interface Feature {
 	title: string;
@@ -48,60 +44,29 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Control Panel',
 		key: 'Super+Ctrl+O',
-		blurb:
-			'Audio, Bluetooth, wallpaper, theme and monitors in one tabbed popup — a single gear on the bar.'
+		blurb: 'Audio, Bluetooth, wallpaper, theme and monitors in one popup.'
 	},
 	{
 		title: 'Settings',
 		key: 'Super+Ctrl+S',
-		blurb:
-			'A real window to edit bar layout, dock chrome, plugins, fonts and startup apps — including a dual-pane arrange UI for bar widgets (Omarchy’s on-bar drag gestures are not ported).'
-	},
-	{
-		title: 'Floating island bar',
-		blurb:
-			'Optional inset, rounded bar chrome — the same idea as the dock’s pill. A Settings → Bar toggle, not a rebuild.'
+		blurb: 'Bar, dock, fonts and startup apps in a real window — no config files.'
 	},
 	{
 		title: 'Dock',
-		blurb:
-			'A persistent bottom dock: pinned apps, running-app dots, hover magnification. First-party here; upstream’s dock is a separate community plugin.'
+		blurb: 'Pinned apps, running-app dots and hover magnification.'
 	},
 	{
 		title: 'Display profiles',
 		key: 'Super+Ctrl+D',
-		blurb:
-			'xrandr resolution / on / off / primary / position, with layouts saved per output topology and laptop-lid handling.'
-	},
-	{
-		title: 'Community plugins',
-		blurb:
-			'Curated third-party ports — weather, radar, calculator, email and more — install opt-in via the omaxian-install.sh TUI or install-community-plugins.sh under ~/.config/omarchy/plugins/, vetted by omarchy-plugin-check, -validate and -update.'
-	},
-	{
-		title: 'omarchy-plugin-check',
-		blurb:
-			'Static check of a community plugin against this X11 port (Wayland / Hyprland / PipeWire / systemd couplings). Upstream only has schema validation.'
-	},
-	{
-		title: 'SysStats · VPN · apt',
-		blurb:
-			'CPU / GPU / RAM on the bar, a VPN indicator, and a live count of apt-upgradable packages.'
+		blurb: 'Resolution, position and on/off per monitor, saved per layout.'
 	},
 	{
 		title: 'Media widget',
-		blurb:
-			'MPD sits next to every other MPRIS player through mpDris2 — one control for all of them.'
+		blurb: 'MPD and every MPRIS player behind one control.'
 	},
 	{
-		title: 'Help on the bar',
-		key: 'Super+K',
-		blurb: 'The “?” widget: a cheat-sheet of this session’s i3 binds, always one key away.'
-	},
-	{
-		title: 'Debian / Devuan session',
-		blurb:
-			'omarchy-host picks systemd, elogind or plain shutdown(8) at runtime, so the same power/session commands work on Debian, Devuan and Ubuntu. PulseAudio or PipeWire; apt instead of pacman; redshift for night light.'
+		title: 'Community plugins',
+		blurb: 'Opt-in weather, calculator, email and more — each checked with omarchy-plugin-check.'
 	}
 ];
 
@@ -209,54 +174,13 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 	}
 ];
 
-export const KEYBINDINGS: [string, string][] = [
-	['Super+Return', 'terminal'],
-	['Super+Space / Alt+F2', 'Omarchy menu / run a command'],
-	['Super+Esc', 'power menu'],
-	['Super+K', 'keybinding help'],
-	['Alt+Ctrl+T', 'theme picker'],
-	['Super+Ctrl+A / B / W / P', 'audio / bluetooth / network / power'],
-	['Super+Ctrl+O / Super+Ctrl+S', 'Control Panel / Settings'],
-	['Super+Ctrl+D', 'display settings'],
-	['Super+Ctrl+C / Super+Ctrl+L', 'screenshot / lock'],
-	['Super+1…0', 'workspaces (global)'],
-	['Super+Tab', 'next workspace on this monitor'],
-	['Super+Alt+arrows', 'move window to adjacent monitor']
-];
-
 /** One-shot curl|bash entry (recommended). */
 export const INSTALL_ONESHOT: string[] = [
 	'curl -fsSL https://raw.githubusercontent.com/aozora/omaxian/main/bootstrap.sh | bash'
 ];
 
-/** After cloning: TUI installer (and noninteractive flag). */
-export const INSTALL_CLONE: string[] = [
-	'git clone https://github.com/aozora/omaxian.git ~/projects/omaxian',
-	'cd ~/projects/omaxian',
-	'./omaxian-install.sh'
-];
-
-/** Noninteractive desktop-only install (no community plugins). */
-export const INSTALL_NONINTERACTIVE = './omaxian-install.sh --yes';
-
-/** Advanced / re-run path under scripts/. */
-export const INSTALL_ADVANCED: string[] = [
-	'sudo ./scripts/setup.sh          # packages, fonts, session D-Bus',
-	'./scripts/install.sh             # themes + omarchy-* commands',
-	'./scripts/deploy.sh              # i3 / Quickshell / ~/.xsessionrc'
-];
-
-/** Back-compat alias used by older copy helpers — prefers the one-shot. */
-export const INSTALL: string[] = INSTALL_ONESHOT;
-
-export const INSTALL_AFTER: string[] = [
-	'omarchy-shell shell ping                 # → ok',
-	'omarchy-shell shell listPlugins | jq length   # → ~37',
-	'pgrep -x quickshell                      # one process'
-];
-
 export const QUICKSHELL_NOTE =
-	'The shell needs Quickshell ≥ 0.2 (0.3.x tested). Debian 13+ can apt install quickshell. On Debian < 13 / Devuan it is often only in testing (Forky / Freia) — setup.sh warns and skips it; pin testing or build from source.';
+	'The shell needs Quickshell ≥ 0.2. Debian 13+ has it in apt; on older Debian or Devuan, build it from source.';
 
 export interface Shot {
 	src: string;
@@ -276,11 +200,6 @@ export const SHOTS: Shot[] = [
 		desc: 'MPD alongside every MPRIS player. Theme: Everforest.'
 	},
 	{
-		src: '/src/lib/assets/shots/weather-matte-black.png',
-		label: 'Weather',
-		desc: 'Forecast popup straight from the bar widget. Theme: Matte Black.'
-	},
-	{
 		src: '/src/lib/assets/shots/settings-miasma.png',
 		label: 'Settings',
 		desc: 'Bar, dock, widgets and startup apps — no text editor needed. Theme: Miasma.'
@@ -294,49 +213,7 @@ export const SHOTS: Shot[] = [
 		src: '/src/lib/assets/shots/control-panel-catpuccin.png',
 		label: 'Control Panel',
 		desc: 'Audio, Bluetooth, wallpaper, theme and monitors. Theme: Catppuccin.'
-	},
-	{
-		src: '/src/lib/assets/shots/calendar-lupine.png',
-		label: 'Calendar',
-		desc: 'Calendar widget. Theme: Lupine.'
-	},
-	{
-		src: '/src/lib/assets/shots/network-hackerman.png',
-		label: 'Network',
-		desc: 'Network widget. Theme: Hackerman.'
-	},
-	{
-		src: '/src/lib/assets/shots/power-menu-vantablack.png',
-		label: 'Power menu',
-		desc: 'Lock, suspend, reboot, shut down. Theme: Vantablack.'
 	}
-];
-
-export const NOT_1_1: string[] = [
-	'Click-outside does not always close a popup — a widget anchored to the bar may stay open if you click into another window. Close it with Escape, the same widget, or the same keybind.',
-	'Lock screen is i3lock-omaxian, not Omarchy’s Wayland session-lock plugin. Settings → Lock screen sets screenshot / image / random backgrounds, blur, and optional idle auto-lock via xss-lock + xset. Manual lock: Super+Ctrl+L. No in-shell password UI or fingerprint PAM.',
-	'No dimming overlay. Full-screen Omarchy scrims would go black under picom; panels are small popups instead. Escape dismisses them.',
-	'The bar cannot be dragged to another screen or reordered by dragging widgets — you edit it in Settings.',
-	'Display panel is layout only (resolution, on/off, position). Omarchy’s brightness / fractional-scale panel is not ported — use brightness keys.',
-	'Audio panel has no input VU meter; per-app rows show the raw app name.',
-	'No Omarchy clipboard history, image carousel, agents, or built-in notification daemon — notifications stay on dunst. Theme picking is a thumbnail grid. The menu skips Arch Install/Remove trees and Hyprland-only actions. Emoji picker, OCR/QR capture, LocalSend share, and screen recording are ported; webcam overlay and dictation are not.',
-	'Screen recording uses Flatpak com.dec05eba.gpu_screen_recorder (or gpu-screen-recorder on PATH) with an X11 region picker (slop).',
-	'Share uses LocalSend (Flatpak org.localsend.localsend_app or a native localsend binary).',
-	'There is no uwsm; commands fall back to ${OMARCHY_PATH:=$HOME/.local/share/omarchy}.',
-	'Reminders use sleep, not systemd timers. Night light is redshift, not hyprsunset.',
-	'i3 restart is not a full reload. Log out and back in after the first deploy, or run omarchy-restart-shell.',
-	'It is the same shell running on X11/i3 — not a Hyprland session.'
-];
-
-export const STACK: string[] = [
-	'Devuan / Debian',
-	'X11 · XLibre',
-	'i3',
-	'Quickshell',
-	'picom',
-	'dunst',
-	'elogind',
-	'apt'
 ];
 
 export const CREDITS = [

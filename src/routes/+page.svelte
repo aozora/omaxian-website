@@ -1,17 +1,14 @@
 <script lang="ts">
-	// One merged landing page — the former /live, /boot and chooser routes
-	// collapsed into a single scroll. /chiseled was retired outright.
 	import Mark from '#lib/Mark.svelte';
 	import GithubIcon from '#lib/GithubIcon.svelte';
 	import Lightbox from '#lib/Lightbox.svelte';
-	import { ALL_THEME_NAMES } from '#lib/themes';
 	import { PUBLIC_POSTHOG_PROJECT_TOKEN, PUBLIC_POSTHOG_HOST } from '$app/env/public';
 	import type { Picture } from 'vite-imagetools';
 	import posthog from 'posthog-js';
 	import {
 		REPO,
-		LATEST_RELEASE,
 		OMARCHY,
+		DOCS,
 		TAGLINE,
 		PITCH,
 		SCOPE,
@@ -20,19 +17,12 @@
 		COMMUNITY_PLUGINS,
 		COMMUNITY_PLUGINS_DIR,
 		INSTALL_ONESHOT,
-		INSTALL_CLONE,
-		INSTALL_NONINTERACTIVE,
-		INSTALL_ADVANCED,
-		INSTALL_AFTER,
-		QUICKSHELL_NOTE,
-		QUICKSHELL_INSTALL,
-		QUICKSHELL_UBUNTU,
-		INSTALL_SCRIPTS_DOC,
-		UBUNTU_QUICKSHELL_NOTE,
-		SHOTS,
-		NOT_1_1,
+		REQUIREMENTS,
 		TESTED_ON,
 		UBUNTU_NOTE,
+		QUICKSHELL_NOTE,
+		QUICKSHELL_INSTALL,
+		SHOTS,
 		CREDITS,
 		type Shot
 	} from '#lib/omaxian';
@@ -49,70 +39,6 @@
 		import: 'default'
 	});
 
-	const BOOT: string[] = [
-		'booting session …',
-		'[  ok  ]  elogind session registered — no systemd, no uwsm',
-		'[  ok  ]  connected to i3 IPC socket',
-		'[  ok  ]  picom compositor started',
-		'[  ok  ]  dunst notification daemon started',
-		'starting quickshell (omarchy-shell) …',
-		'[  ok  ]  bar mounted: workspaces, clock, network, tray',
-		'[  ok  ]  widgets loaded: media, weather, sysstats, vpn, apt',
-		'[  ok  ]  dock mounted — 6 pinned',
-		'loading plugins from ~/.local/share/omarchy/shell/plugins …',
-		'[  ok  ]  37 first-party plugins registered',
-		'scanning ~/.config/omarchy/plugins (community, opt-in) …',
-		`[  ok  ]  ${COMMUNITY_PLUGINS.length} found, 0 enabled`,
-		`applying theme nebula-ridge (${ALL_THEME_NAMES.length} installed) …`,
-		'[  ok  ]  theme applied — Alt+Ctrl+T to switch',
-		'[  ok  ]  redshift night light armed',
-		'[  ok  ]  omarchy-* commands linked into PATH',
-		'session ready.'
-	];
-
-	// Progressive enhancement: SSR / no-JS / reduced-motion shows the full log.
-	// With JS + motion allowed, it types out only once the terminal box actually
-	// scrolls into view, rather than while it's still hidden below the hero.
-	let shown = $state(BOOT.length);
-	let booted = $state(true);
-	let termEl = $state<HTMLDivElement | null>(null);
-	let started = $state(false);
-
-	$effect(() => {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-		// hide immediately; the observer below reveals it on scroll-into-view
-		shown = 0;
-		booted = false;
-	});
-
-	$effect(() => {
-		if (!termEl || started) return;
-		const io = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting) {
-					started = true;
-					io.disconnect();
-				}
-			},
-			{ threshold: 0.3 }
-		);
-		io.observe(termEl);
-		return () => io.disconnect();
-	});
-
-	$effect(() => {
-		if (!started) return;
-		let i = 0;
-		const id = setInterval(() => {
-			shown = ++i;
-			if (i >= BOOT.length) {
-				clearInterval(id);
-				setTimeout(() => (booted = true), 450);
-			}
-		}, 180);
-		return () => clearInterval(id);
-	});
-
 	function openScreenshot(shot: Shot) {
 		activeShot = shot;
 		if (posthogConfigured) {
@@ -121,7 +47,6 @@
 	}
 
 	let copied = $state(false);
-	let copiedAdvanced = $state(false);
 	async function copyInstall() {
 		try {
 			await navigator.clipboard.writeText(INSTALL_ONESHOT.join('\n'));
@@ -134,22 +59,10 @@
 			copied = false;
 		}
 	}
-	async function copyAdvanced() {
-		try {
-			await navigator.clipboard.writeText(INSTALL_ADVANCED.join('\n'));
-			if (posthogConfigured) {
-				posthog.capture('installation_instructions_copied', { kind: 'advanced' });
-			}
-			copiedAdvanced = true;
-			setTimeout(() => (copiedAdvanced = false), 1600);
-		} catch {
-			copiedAdvanced = false;
-		}
-	}
 </script>
 
 <main id="main">
-	<!-- ============ HERO ============ -->
+	<!-- ============ HERO: what it is + the one thing to do ============ -->
 	<section class="hero full-bleed">
 		<div class="hero-bg" aria-hidden="true"></div>
 		<div class="hero-inner">
@@ -166,81 +79,84 @@
 
 			<p class="tagline">{TAGLINE}</p>
 
+			<div class="term install">
+				<div class="term-top">
+					<span>install</span>
+					<button type="button" onclick={copyInstall}>{copied ? 'copied ✓' : 'copy'}</button>
+				</div>
+				<div class="term-body">
+					{#each INSTALL_ONESHOT as line (line)}<span class="ln">{line}</span>{/each}
+				</div>
+			</div>
+			<p class="req">{REQUIREMENTS} Tested on {TESTED_ON.join(', ')}.</p>
+
 			<div class="cta">
 				<a
 					class="btn primary"
-					href={LATEST_RELEASE}
+					href={REPO}
 					target="_blank"
 					rel="noreferrer"
 					onclick={() => {
 						if (posthogConfigured) posthog.capture('github_release_opened');
 					}}
 				>
-					<GithubIcon class="gh-icon" /> Get it on GitHub
+					<GithubIcon class="gh-icon" /> View on GitHub
 				</a>
-				<a class="btn ghost" href="#install">How to install</a>
-			</div>
-
-			<iframe
-				width="560"
-				height="315"
-				src="https://www.youtube.com/embed/-JV9oh1XsAU?si=6Tl6SACcEIaEhbGo"
-				title="YouTube video player"
-				frameborder="0"
-				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-				referrerpolicy="strict-origin-when-cross-origin"
-				allowfullscreen
-			></iframe>
-		</div>
-	</section>
-
-	<!-- ============ BOOT LOG (boxed terminal) ============ -->
-	<section class="term-section">
-		<!-- <div class="term-bg" aria-hidden="true"></div> -->
-		<div class="block">
-			<div class="term-shell" bind:this={termEl}>
-				<div class="term-chrome">
-					<span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-					<span class="term-name">omaxian@linux: booting session</span>
-				</div>
-				<div class="term-screen">
-					<div class="term-scan" aria-hidden="true"></div>
-					<div class="log" aria-label="boot log">
-						{#each BOOT.slice(0, shown) as line, i (i)}
-							<span
-								class="line"
-								class:hdr={i === 0}
-								class:okline={line.startsWith('[  ok')}
-								class:warnline={line.startsWith('[ warn')}
-								class:pending={i !== 0 && !line.startsWith('[')}>{line}</span
-							>
-						{/each}{#if !booted}<span class="cursor" aria-hidden="true">█</span>{/if}
-					</div>
-				</div>
+				<a class="btn ghost" href={DOCS} target="_blank" rel="noreferrer">Read the docs</a>
 			</div>
 		</div>
 	</section>
 
-	<!-- ============ ABOUT (pitch · scope · attribution) ============ -->
+	<!-- ============ ABOUT ============ -->
 	<section class="about">
 		<div class="about-inner block-centered">
-			<h2 class="rule">About</h2>
+			<h2 class="rule">What is it?</h2>
 			<p class="pitch">{PITCH}</p>
 			<p class="scope">{SCOPE}</p>
-			<p class="attribution">
-				{ATTRIBUTION}
-				<a href={OMARCHY} target="_blank" rel="noreferrer">omarchy.org</a>
-			</p>
 		</div>
 	</section>
 
-	<!-- ============ WHAT IT ADDS ============ -->
-	<section class="block-centered" id="adds">
-		<h2 class="rule">What Omaxian adds</h2>
-		<p class="lede">
-			Not just a backend swap. Most pieces have no upstream counterpart — they exist because X11 /
-			i3 / Debian needed them, or because a GUI was missing.
-		</p>
+	<!-- ============ SCREENSHOTS ============ -->
+	<section class="gallery">
+		<div class="gallery-inner block-centered">
+			<h2 class="rule">See it</h2>
+			<div class="video">
+				<iframe
+					src="https://www.youtube.com/embed/-JV9oh1XsAU?si=6Tl6SACcEIaEhbGo"
+					title="Omaxian demo video"
+					loading="lazy"
+					allow="encrypted-media; picture-in-picture; web-share"
+					referrerpolicy="strict-origin-when-cross-origin"
+					allowfullscreen
+				></iframe>
+			</div>
+			<div class="shots">
+				{#each SHOTS as s (s.src)}
+					<figure>
+						<button
+							type="button"
+							class="shot-btn"
+							onclick={() => openScreenshot(s)}
+							aria-label={`Open ${s.label} screenshot`}
+						>
+							<enhanced:img
+								src={shotImages[s.src]}
+								alt={s.label + ' — ' + s.desc}
+								sizes="(max-width: 767px) 100vw, 400px"
+								loading="lazy"
+								decoding="async"
+							/>
+						</button>
+						<figcaption><b>{s.label}</b> — {s.desc}</figcaption>
+					</figure>
+				{/each}
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ HIGHLIGHTS ============ -->
+	<section class="block-centered">
+		<h2 class="rule">Highlights</h2>
 		<ul class="feats">
 			{#each FEATURES as f (f.title)}
 				<li>
@@ -252,15 +168,23 @@
 				</li>
 			{/each}
 		</ul>
+		<p class="more-link">
+			<a href={COMMUNITY_PLUGINS_DIR} target="_blank" rel="noreferrer">
+				<GithubIcon class="gh-icon" /> Browse community plugins →
+			</a>
+			<a href={DOCS} target="_blank" rel="noreferrer"
+				>All features and known differences from Omarchy →</a
+			>
+		</p>
 	</section>
 
 	<!-- ============ COMMUNITY PLUGINS ============ -->
 	<section class="block-centered">
 		<h2 class="rule">Community plugins</h2>
-		<p class="lede">
-			Opt-in third-party ports live in <code>community-plugins/</code> — not part of the default
-			desktop (<code>scripts/setup.sh</code>, <code>install.sh</code>, <code>deploy.sh</code>).
-			During <code>./omaxian-install.sh</code> you can select ports after the desktop phases.
+		<p class="intro">
+			Opt-in third-party ports, not part of the default desktop. Pick them during
+			installation, or check any other Omarchy plugin with
+			<code>omarchy-plugin-check</code>.
 		</p>
 		<ul class="feats">
 			{#each COMMUNITY_PLUGINS as p (p.id)}
@@ -268,155 +192,44 @@
 					<span class="bullet">▸</span>
 					<div>
 						<b><a href={p.href} target="_blank" rel="noreferrer">{p.label}</a></b>
-						<span class="desc">{p.blurb} <code>{p.id}</code></span>
+						<span class="desc">{p.blurb}</span>
 					</div>
 				</li>
 			{/each}
 		</ul>
-		<p class="callout">
-			More plugins can join this list. Run <code>omarchy-plugin-check</code> against any other Omarchy
-			community plugin first — a clean pass means it already works as-is; flagged Wayland / Hyprland /
-			PipeWire / systemd couplings just mean it needs a quick port before it's ready.
-		</p>
-		<p class="more-link">
-			<a href={COMMUNITY_PLUGINS_DIR} target="_blank" rel="noreferrer">
-				<GithubIcon class="gh-icon" /> Browse community-plugins/ →
-			</a>
-		</p>
 	</section>
 
-	<!-- ============ ON SCREEN ============ -->
-	<section class="gallery">
-		<div class="gallery-inner block-centered">
-			<h2 class="rule">On screen</h2>
-			<div class="shots">
-				{#each SHOTS as s, i (s.src)}
-					<figure>
-						<button
-							type="button"
-							class="shot-btn"
-							onclick={() => (activeShot = s)}
-							aria-label={`Open ${s.label} screenshot`}
-						>
-							<enhanced:img
-								src={shotImages[s.src]}
-								alt={s.label + ' — ' + s.desc}
-								sizes="(max-width: 767px) 100vw, 767px"
-								loading={i === 0 ? 'eager' : 'lazy'}
-								decoding="async"
-								fetchpriority={i === 0 ? 'high' : 'auto'}
-							/>
-						</button>
-						<figcaption><b>{s.label}</b> — {s.desc}</figcaption>
-					</figure>
-				{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- ============ INSTALL ============ -->
-	<section id="install" class="block-centered">
-		<h2 class="rule">Install</h2>
-		<p class="lede">
-			You need an X11 session with i3 and a login path that runs <code>/etc/X11/Xsession</code>
-			(most display managers do; <code>startx</code> with a proper <code>.xsession</code> also
-			works). Then log out and back in — not <code>i3 restart</code>.
-		</p>
-		<p class="tested">Regularly tested against <b>{TESTED_ON.join(', ')}</b>.</p>
-		<p class="tested note">{UBUNTU_NOTE}</p>
-		<p class="tested note">
-			{UBUNTU_QUICKSHELL_NOTE}
-			<a href={QUICKSHELL_UBUNTU} target="_blank" rel="noreferrer">Quickshell Ubuntu guide →</a>
-		</p>
-
-		<h3 class="subrule">One-shot (recommended)</h3>
-		<p class="lede compact">
-			From a machine with <code>curl</code> and <code>git</code> (or let the bootstrap install
-			<code>git</code>). The TUI (whiptail) runs system packages → themes/bin → home configs,
-			verifies Quickshell, then optionally lets you pick community plugins.
-		</p>
-		<div class="term">
-			<div class="term-top">
-				<span>bootstrap</span>
-				<button type="button" onclick={copyInstall}>{copied ? 'copied ✓' : 'copy'}</button>
-			</div>
-			<div class="term-body">
-				{#each INSTALL_ONESHOT as line (line)}<span class="ln">{line}</span>{/each}
-			</div>
-		</div>
-
-		<h3 class="subrule">From a clone</h3>
-		<div class="term">
-			<div class="term-top"><span>~/projects/omaxian</span></div>
-			<div class="term-body">
-				{#each INSTALL_CLONE as line (line)}<span class="ln">{line}</span>{/each}
-				<span class="ln comment"># noninteractive desktop only, no plugins:</span>
-				<span class="ln">{INSTALL_NONINTERACTIVE}</span>
-			</div>
-		</div>
-
-		<h3 class="subrule">Advanced / re-run</h3>
-		<p class="lede compact">
-			The three scripts under <code>scripts/</code> stay separate. Root
-			<code>./setup.sh</code> / <code>./install.sh</code> / <code>./deploy.sh</code> are thin
-			shims.
-			<a href={INSTALL_SCRIPTS_DOC} target="_blank" rel="noreferrer">install-scripts.md →</a>
-		</p>
-		<div class="term">
-			<div class="term-top">
-				<span>scripts/</span>
-				<button type="button" onclick={copyAdvanced}>{copiedAdvanced ? 'copied ✓' : 'copy'}</button>
-			</div>
-			<div class="term-body">
-				{#each INSTALL_ADVANCED as line (line)}<span class="ln">{line}</span>{/each}
-			</div>
-		</div>
-
-		<h3 class="subrule">Quickshell</h3>
-		<p class="lede compact">
-			{QUICKSHELL_NOTE}
-			<a href={QUICKSHELL_INSTALL} target="_blank" rel="noreferrer">Build from source →</a>
-		</p>
-
-		<h3 class="subrule">After install</h3>
-		<div class="term">
-			<div class="term-top"><span>smoke check</span></div>
-			<div class="term-body">
-				{#each INSTALL_AFTER as line (line)}<span class="ln">{line}</span>{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- ============ NOT 1:1 ============ -->
-	<section class="block-centered">
-		<h2 class="rule">Where it is not 1:1 with Omarchy</h2>
-		<p class="lede">
-			Omaxian tracks the Omarchy shell, but X11 / XLibre is not Wayland and i3 is not Hyprland — so
-			parity is partial by design.
-		</p>
+	<!-- ============ INSTALL NOTES ============ -->
+	<section class="block-centered notes">
+		<h2 class="rule">Before you install</h2>
 		<ul class="caveats list-disc">
-			{#each NOT_1_1 as c (c)}<li class="break-all">{c}</li>{/each}
+			<li>{UBUNTU_NOTE}</li>
+			<li>
+				{QUICKSHELL_NOTE}
+				<a href={QUICKSHELL_INSTALL} target="_blank" rel="noreferrer">Build from source →</a>
+			</li>
+			<li>
+				Prefer a clone or manual steps? See the
+				<a href={DOCS} target="_blank" rel="noreferrer">install docs</a>.
+			</li>
 		</ul>
 	</section>
 
 	<!-- ============ FOOT ============ -->
 	<footer class="foot">
 		<div class="foot-log block-centered">
-			<span>omaxian@linux:~$ cat CREDITS</span>
+			<p class="attribution">
+				{ATTRIBUTION}
+				<a href={OMARCHY} target="_blank" rel="noreferrer">omarchy.org</a>
+			</p>
 			<span>&nbsp;</span>
+			<span>omaxian@linux:~$ cat CREDITS</span>
 			{#each CREDITS as c (c.label)}
 				<div>
 					<a href={c.href} target="_blank" rel="noreferrer"># {c.label}</a>
 					<span> — {c.by}</span>
 				</div>
 			{/each}
-			<span>&nbsp;</span>
-			<span>omaxian@linux:~$ logout</span>
-			<div class="foot-cta">
-				<a class="btn primary" href={REPO} target="_blank" rel="noreferrer">
-					<GithubIcon class="gh-icon" /> github.com/aozora/omaxian
-				</a>
-			</div>
 			<p class="copyright"># © 2026 Marcello Palmitessa</p>
 		</div>
 	</footer>
@@ -454,12 +267,6 @@
 	}
 
 	/* ---------- shared primitives ------------------------------------------ */
-	.block {
-		/* max-width: 74rem; */
-		/* margin: 0 auto; */
-		padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
-		/* border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent); */
-	}
 	.block-centered {
 		width: 100%;
 		max-width: 74rem;
@@ -476,37 +283,6 @@
 		border-bottom: 3px solid var(--omx-accent);
 		display: inline-block;
 	}
-	.lede {
-		max-width: 46rem;
-		margin: 0 0 2rem;
-		font-size: 1.05rem;
-		line-height: 1.65;
-		color: color-mix(in srgb, var(--omx-bone) 72%, transparent);
-	}
-	.subrule {
-		margin: 2rem 0 0.75rem;
-		font-size: 1.05rem;
-		font-weight: 650;
-		letter-spacing: -0.01em;
-		color: var(--omx-bone);
-	}
-	.lede.compact {
-		margin-bottom: 1rem;
-		font-size: 0.95rem;
-	}
-	.lede.compact a,
-	.tested.note a {
-		color: var(--omx-accent);
-	}
-	code {
-		font-family: var(--omx-mono);
-		font-size: 0.88em;
-		color: var(--omx-bone);
-		background: color-mix(in srgb, var(--omx-bone) 8%, transparent);
-		padding: 0.08em 0.35em;
-		border-radius: 3px;
-	}
-
 	.cta {
 		display: flex;
 		flex-wrap: wrap;
@@ -550,7 +326,7 @@
 	/* ---------- hero -------------------------------------------------------- */
 	.hero {
 		position: relative;
-		min-height: 100dvh;
+		min-height: 90dvh;
 		display: grid;
 		/* an explicit minmax(0, 1fr) track, not the default auto one — an auto
 		   track sizes itself to its item's max-content width, and .hero-inner's
@@ -630,107 +406,6 @@
 		letter-spacing: 0.01em;
 	}
 
-	/* ---------- boxed boot-log terminal ------------------------------------ */
-	.term-section {
-		grid-column: 1 / -1;
-		border-top: 0;
-		background:
-			repeating-linear-gradient(
-				to bottom,
-				rgba(255, 255, 255, 0.035) 0,
-				rgba(255, 255, 255, 0.035) 1px,
-				transparent 1px,
-				transparent 3px
-			),
-			var(--omx-galaxy-darkest-blue);
-	}
-	.term-shell {
-		max-width: 52rem;
-		margin: 0 auto;
-		background: var(--omx-void);
-		border: 1px solid color-mix(in srgb, var(--omx-bone) 16%, transparent);
-		border-radius: 10px;
-		overflow: hidden;
-		box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
-	}
-	.term-chrome {
-		display: flex;
-		align-items: center;
-		gap: 0.7rem;
-		padding: 0.6rem 0.9rem;
-		background: var(--omx-plate-2);
-		border-bottom: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
-		font-family: var(--omx-mono);
-		font-size: 0.78rem;
-		color: color-mix(in srgb, var(--omx-bone) 55%, transparent);
-	}
-	.term-dots {
-		display: flex;
-		gap: 5px;
-	}
-	.term-dots i {
-		width: 9px;
-		height: 9px;
-		border-radius: 50%;
-		background: color-mix(in srgb, var(--omx-bone) 22%, transparent);
-	}
-	.term-screen {
-		position: relative;
-		padding: 1.4rem 1.3rem;
-		font-family: var(--omx-mono);
-		font-size: clamp(0.78rem, 1.6vw, 0.92rem);
-		line-height: 1.75;
-		overflow-x: auto;
-	}
-	.term-scan {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		background: repeating-linear-gradient(
-			to bottom,
-			rgba(255, 255, 255, 0.03) 0,
-			rgba(255, 255, 255, 0.03) 1px,
-			transparent 1px,
-			transparent 3px
-		);
-		mix-blend-mode: overlay;
-	}
-	.log .line {
-		position: relative;
-		display: block;
-		white-space: pre-wrap;
-		word-break: break-word;
-	}
-	.log .hdr {
-		color: var(--omx-bone);
-		text-shadow: 0 0 10px color-mix(in srgb, var(--omx-accent) 50%, transparent);
-		margin-bottom: 0.4rem;
-	}
-	.log .okline {
-		color: color-mix(in srgb, var(--omx-bone) 55%, transparent);
-	}
-	.log .warnline {
-		color: var(--omx-red);
-	}
-	.log .pending {
-		color: color-mix(in srgb, var(--omx-bone) 82%, transparent);
-		margin-top: 0.5rem;
-	}
-	.cursor {
-		position: relative;
-		color: var(--omx-red);
-	}
-	@media (prefers-reduced-motion: no-preference) {
-		.cursor {
-			animation: blink 1s steps(1) infinite;
-		}
-		@keyframes blink {
-			50% {
-				opacity: 0;
-			}
-		}
-	}
-
 	/* ---------- about -------------------------------------------------------- */
 	.about {
 		grid-column: 1 / -1;
@@ -803,9 +478,18 @@
 		color: var(--omx-accent);
 		font-family: var(--omx-mono);
 	}
-	.feats b {
-		color: var(--omx-bone);
-		font-weight: 700;
+	.intro {
+		max-width: 46rem;
+		margin: 0 0 1.5rem;
+		line-height: 1.6;
+		color: color-mix(in srgb, var(--omx-bone) 72%, transparent);
+	}
+	.intro code {
+		font-family: var(--omx-mono);
+		font-size: 0.88em;
+		background: color-mix(in srgb, var(--omx-bone) 8%, transparent);
+		padding: 0.08em 0.35em;
+		border-radius: 3px;
 	}
 	.feats a {
 		color: inherit;
@@ -814,6 +498,10 @@
 	}
 	.feats a:hover {
 		color: var(--omx-accent);
+	}
+	.feats b {
+		color: var(--omx-bone);
+		font-weight: 700;
 	}
 	.feats .key {
 		margin-left: 0.6rem;
@@ -832,21 +520,10 @@
 		line-height: 1.55;
 		color: color-mix(in srgb, var(--omx-bone) 66%, transparent);
 	}
-	.feats .desc code {
-		font-size: 0.9em;
-	}
-
-	.callout {
-		margin: 1.6rem 0 0;
-		max-width: 46rem;
-		padding: 1rem 1.2rem;
-		border-left: 3px solid var(--omx-red);
-		background: color-mix(in srgb, var(--omx-red) 6%, transparent);
-		font-size: 0.92rem;
-		line-height: 1.6;
-		color: color-mix(in srgb, var(--omx-bone) 82%, transparent);
-	}
 	.more-link {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem 1.8rem;
 		margin: 1.2rem 0 0;
 		font-size: 0.9rem;
 	}
@@ -924,21 +601,6 @@
 	}
 
 	/* ---------- install / caveats -------------------------------------------- */
-	.tested {
-		margin: -1rem 0 2rem;
-		font-size: 0.92rem;
-		color: color-mix(in srgb, var(--omx-bone) 60%, transparent);
-	}
-	.tested b {
-		color: var(--omx-bone);
-		font-weight: 600;
-	}
-	.tested.note {
-		margin: -1.5rem 0 2rem;
-		font-size: 0.82rem;
-		color: color-mix(in srgb, var(--omx-bone) 42%, transparent);
-	}
-
 	.term {
 		background: var(--omx-plate-2);
 		border: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
@@ -985,14 +647,34 @@
 		content: '$ ';
 		color: var(--omx-accent);
 	}
-	.term-body .ln.comment,
-	.term-body .ln.comment::before {
-		color: color-mix(in srgb, var(--omx-bone) 45%, transparent);
+	.install {
+		width: 100%;
+		max-width: 40rem;
+		text-align: left;
 	}
-	.term-body .ln.comment::before {
-		content: '';
+	.install .term-body {
+		font-size: clamp(0.78rem, 1.6vw, 0.95rem);
 	}
-
+	.req {
+		margin: 0;
+		font-size: 0.85rem;
+		color: var(--omx-mute);
+	}
+	.video {
+		aspect-ratio: 16 / 9;
+		margin-bottom: 1.5rem;
+		border: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
+		border-radius: 8px;
+		overflow: hidden;
+	}
+	.video iframe {
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+	.caveats a {
+		color: var(--omx-accent);
+	}
 	.caveats {
 		margin: 0;
 		padding-left: 1.1rem;
@@ -1028,9 +710,6 @@
 		white-space: pre-wrap;
 		text-decoration: underline;
 	}
-	.foot-cta {
-		margin: 1.2rem 0;
-	}
 	.copyright {
 		margin: 0;
 		font-family: var(--omx-mono);
@@ -1041,7 +720,6 @@
 	/* ---------- scroll reveal (progressive enhancement) ---------------------- */
 	@media (prefers-reduced-motion: no-preference) {
 		@supports (animation-timeline: view()) {
-			.block,
 			.foot {
 				animation: reveal linear both;
 				animation-timeline: view();
