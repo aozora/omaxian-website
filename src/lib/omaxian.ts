@@ -9,6 +9,13 @@ export const QUICKSHELL = 'https://quickshell.org';
 export const QUICKSHELL_INSTALL = 'https://quickshell.org/docs/guide/install/';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
 
+// Site-wide (index page): the two ways to get Omaxian.
+export const SITE_TAGLINE =
+	'The Omarchy desktop on X11 — as a shell for your Debian, or as a whole OS';
+
+export const SITE_PITCH =
+	'Omaxian carries the Omarchy shell to X11 / XLibre and i3, without Wayland or systemd. Install it as a shell on the Debian-family system you already run, or boot Omaxian OS, a Devuan-based distribution that ships it as the default desktop.';
+
 export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X11 / XLibre + i3';
 
 export const PITCH =
@@ -223,5 +230,15 @@ export const CREDITS = [
 		label: 'i3 base config',
 		by: 'derived from Archcraft',
 		href: 'https://github.com/archcraft-os/archcraft-i3wm'
+	},
+	{
+		label: 'Devuan',
+		by: 'the systemd-free Debian that Omaxian OS is built on',
+		href: 'https://www.devuan.org'
+	},
+	{
+		label: 'XLibre',
+		by: 'the X server shipped by Omaxian OS',
+		href: 'https://github.com/X11Libre/xserver'
 	}
 ];

@@ -1,0 +1,346 @@
+/* ---- Shared page primitives ----------------------------------------------- */
+/* Used by every route (/, /shell, /os). Page-specific bits stay scoped in each
+   +page.svelte. */
+
+.page {
+	z-index: 0;
+	overflow-x: clip;
+	position: relative;
+	display: grid;
+	grid-template-columns: 20px 1fr 20px;
+	justify-content: center;
+	min-height: 90dvh;
+
+	> * {
+		grid-column: 2;
+	}
+
+	> .full-bleed {
+		width: 100%;
+		grid-column: 1 / -1;
+	}
+
+	@media (min-width: 90em) {
+		grid-template-columns: 1fr minmax(auto, 1216px) 1fr;
+	}
+}
+
+.block-centered {
+	width: 100%;
+	max-width: 74rem;
+	margin: 0 auto;
+	padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
+}
+
+/* Full-width tinted band with the CRT scanline; content sits in column 2. */
+.band {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: subgrid;
+	background:
+		repeating-linear-gradient(
+			to bottom,
+			rgba(255, 255, 255, 0.035) 0,
+			rgba(255, 255, 255, 0.035) 1px,
+			transparent 1px,
+			transparent 3px
+		),
+		var(--band-bg, var(--omx-galaxy-darker-blue));
+
+	> * {
+		grid-column: 2;
+	}
+}
+.band.alt {
+	--band-bg: var(--omx-galaxy-dark-blue);
+}
+
+.rule {
+	margin: 0 0 1.4rem;
+	font-size: clamp(1.5rem, 4vw, 2.2rem);
+	font-weight: 680;
+	letter-spacing: -0.02em;
+	padding-bottom: 0.5rem;
+	border-bottom: 3px solid var(--omx-accent);
+	display: inline-block;
+}
+
+/* ---- hero (sub pages) ------------------------------------------------------ */
+.hero {
+	position: relative;
+	display: grid;
+	/* an explicit minmax(0, 1fr) track, not the default auto one, so wide
+	   content (banner, install line) can't size the track past the viewport */
+	grid-template-columns: minmax(0, 1fr);
+	place-items: center;
+	text-align: center;
+	padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 4vw, 3rem);
+	overflow: hidden;
+}
+.hero-bg {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background:
+		repeating-linear-gradient(
+			to bottom,
+			rgba(255, 255, 255, 0.035) 0,
+			rgba(255, 255, 255, 0.035) 1px,
+			transparent 1px,
+			transparent 3px
+		),
+		url('/wallpaper-bg.svg') center / cover no-repeat var(--omx-void);
+}
+.hero-inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: clamp(1.1rem, 2.6vw, 1.75rem);
+	/* explicit width, not shrink-to-fit: see .hero grid track note */
+	width: 100%;
+	max-width: 64rem;
+}
+.eyebrow {
+	margin: 0;
+	font-size: 0.8rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--omx-mute);
+}
+.title {
+	margin: 0;
+	font-size: clamp(2.2rem, 7vw, 4.2rem);
+	font-weight: 760;
+	letter-spacing: -0.03em;
+	line-height: 1.05;
+	text-shadow: 0 0 28px color-mix(in srgb, var(--omx-accent) 35%, transparent);
+}
+.title .x {
+	color: var(--omx-accent);
+}
+.tagline {
+	margin: 0;
+	max-width: 100%;
+	font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+	color: var(--omx-mute);
+	letter-spacing: 0.01em;
+}
+.req {
+	margin: 0;
+	font-size: 0.85rem;
+	color: var(--omx-mute);
+}
+.crosslink {
+	margin: 0;
+	font-size: 0.9rem;
+	color: color-mix(in srgb, var(--omx-bone) 70%, transparent);
+}
+.crosslink a {
+	color: var(--omx-accent);
+}
+
+/* ---- buttons ---------------------------------------------------------------- */
+.cta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.8rem;
+	justify-content: center;
+}
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	padding: 0.8rem 1.4rem;
+	font-weight: 640;
+	font-size: 0.95rem;
+	text-decoration: none;
+	border-radius: 7px;
+	transition:
+		transform 0.15s ease,
+		border-color 0.15s ease,
+		filter 0.15s ease;
+}
+.btn.primary {
+	background: var(--omx-accent);
+	color: var(--omx-void);
+}
+.btn.ghost {
+	border: 1px solid color-mix(in srgb, var(--omx-bone) 30%, transparent);
+	color: var(--omx-bone);
+}
+.btn:hover {
+	transform: translateY(-2px);
+}
+.btn.ghost:hover {
+	border-color: var(--omx-accent);
+}
+.gh-icon {
+	width: 1.05em;
+	height: 1.05em;
+	flex: none;
+}
+
+/* ---- prose ------------------------------------------------------------------ */
+.pitch {
+	margin: 0 0 0.9rem;
+	max-width: 46rem;
+	font-size: 1.05rem;
+	line-height: 1.6;
+	color: color-mix(in srgb, var(--omx-bone) 90%, transparent);
+}
+.scope {
+	margin: 0 0 1.2rem;
+	max-width: 46rem;
+	font-size: 0.96rem;
+	line-height: 1.6;
+	color: color-mix(in srgb, var(--omx-bone) 66%, transparent);
+}
+.intro {
+	max-width: 46rem;
+	margin: 0 0 1.5rem;
+	line-height: 1.6;
+	color: color-mix(in srgb, var(--omx-bone) 72%, transparent);
+}
+.intro code,
+.caveats code {
+	font-family: var(--omx-mono);
+	font-size: 0.88em;
+	background: color-mix(in srgb, var(--omx-bone) 8%, transparent);
+	padding: 0.08em 0.35em;
+	border-radius: 3px;
+}
+
+/* ---- feature / plugin lists --------------------------------------------------- */
+.feats {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.feats li {
+	display: grid;
+	grid-template-columns: 1.4rem 1fr;
+	gap: 0.5rem;
+	padding: 0.85rem 0;
+	border-top: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent);
+}
+.feats li:first-child {
+	border-top: 0;
+}
+.bullet {
+	color: var(--omx-accent);
+}
+.feats a {
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: color-mix(in srgb, var(--omx-bone) 30%, transparent);
+}
+.feats a:hover {
+	color: var(--omx-accent);
+}
+.feats b {
+	color: var(--omx-bone);
+	font-weight: 700;
+}
+.feats .key {
+	margin-left: 0.6rem;
+	padding: 0 0.4rem;
+	font-size: 0.78em;
+	color: var(--omx-accent);
+	border: 1px solid color-mix(in srgb, var(--omx-accent) 45%, transparent);
+	border-radius: 4px;
+	white-space: nowrap;
+}
+.feats .desc {
+	display: block;
+	margin-top: 0.2rem;
+	font-size: 0.94rem;
+	line-height: 1.55;
+	color: color-mix(in srgb, var(--omx-bone) 66%, transparent);
+}
+.more-link {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem 1.8rem;
+	margin: 1.2rem 0 0;
+	font-size: 0.9rem;
+}
+.more-link a {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: var(--omx-accent);
+}
+.more-link a:hover {
+	text-decoration: none;
+}
+
+/* ---- terminal copy-box ------------------------------------------------------------ */
+.term {
+	background: var(--omx-plate-2);
+	border: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
+	border-radius: 8px;
+	overflow: hidden;
+	width: 100%;
+	max-width: 52rem;
+	text-align: left;
+}
+.term-top {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem 0.9rem;
+	font-size: 0.78rem;
+	color: color-mix(in srgb, var(--omx-bone) 55%, transparent);
+	border-bottom: 1px solid color-mix(in srgb, var(--omx-bone) 12%, transparent);
+}
+.term-top button {
+	font: inherit;
+	color: var(--omx-bone);
+	background: transparent;
+	border: 1px solid color-mix(in srgb, var(--omx-bone) 22%, transparent);
+	border-radius: 5px;
+	padding: 0.15rem 0.6rem;
+	cursor: pointer;
+}
+.term-top button:hover {
+	border-color: var(--omx-accent);
+}
+.term-body {
+	padding: 1rem 1.1rem;
+	overflow-x: auto;
+	font-size: 0.82rem;
+	line-height: 1.75;
+	color: var(--omx-bone);
+}
+.term-body .ln {
+	display: block;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+.term-body .ln::before {
+	content: '$ ';
+	color: var(--omx-accent);
+}
+
+/* ---- notes ------------------------------------------------------------------ */
+.caveats {
+	margin: 0;
+	padding-left: 1.1rem;
+	max-width: 46rem;
+	list-style: disc;
+}
+.caveats li {
+	margin: 0.6rem 0;
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: color-mix(in srgb, var(--omx-bone) 74%, transparent);
+}
+.caveats a {
+	color: var(--omx-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btn {
+		transition: none;
+	}
+}
