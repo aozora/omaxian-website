@@ -64,7 +64,7 @@ export const ISOS: Iso[] = [
 		'Desktop and core apps. The rest comes from the network.',
 		[
 			'Optional app groups are picked in the installer and downloaded during install',
-			'Offline install? The picks are installed by the first-boot service once online',
+			'If you install offline, optional picks are applied by the first-boot service once online',
 			'Flatpaks and AppImages are fetched on first boot'
 		]
 	),
