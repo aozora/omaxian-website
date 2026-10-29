@@ -136,6 +136,10 @@
 							>
 							<a class="sha" href={iso.sha256Href}>sha256</a>
 						</div>
+						<p class="digest">
+							<span class="digest-label">sha256</span>
+							<code class="digest-hash">{iso.sha256}</code>
+						</p>
 					</article>
 				{/each}
 			</div>
@@ -248,6 +252,31 @@
 	.sha {
 		font-size: 0.85rem;
 		color: var(--omx-accent);
+	}
+	.digest {
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.45rem 0.65rem;
+		font-size: 0.78rem;
+		line-height: 1.45;
+	}
+	.digest-label {
+		flex-shrink: 0;
+		font-size: 0.72rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--omx-mute);
+	}
+	.digest-hash {
+		margin: 0;
+		font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+		font-size: 0.76rem;
+		color: color-mix(in srgb, var(--omx-bone) 55%, transparent);
+		overflow-wrap: anywhere;
+		word-break: break-all;
 	}
 	.verify {
 		max-width: none;

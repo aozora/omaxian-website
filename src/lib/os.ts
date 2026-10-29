@@ -1,6 +1,6 @@
 // Shared content for the Omaxian OS page.
 // Sourced from github.com/aozora/omaxian-os (README, config/, docs/test-report-0.1.md).
-// Last synced: 2026-10-26.
+// Last synced: 2026-10-29 — ISO sizes and sha256 digests for 0.1.
 
 import type { Shot } from '#lib/omaxian';
 
@@ -26,12 +26,21 @@ export interface Iso {
 	file: string;
 	href: string;
 	sha256Href: string;
+	/** Published sha256 digest of the ISO file. */
+	sha256: string;
 	size: string;
 	blurb: string;
 	points: string[];
 }
 
-function iso(id: Iso['id'], label: string, size: string, blurb: string, points: string[]): Iso {
+function iso(
+	id: Iso['id'],
+	label: string,
+	size: string,
+	sha256: string,
+	blurb: string,
+	points: string[]
+): Iso {
 	const file = `omaxian-${id}-${OS_VERSION}-trans-siberian-shaman-amd64.iso`;
 	return {
 		id,
@@ -39,6 +48,7 @@ function iso(id: Iso['id'], label: string, size: string, blurb: string, points: 
 		file,
 		href: `${DOWNLOAD_BASE}/${file}`,
 		sha256Href: `${DOWNLOAD_BASE}/${file}.sha256`,
+		sha256,
 		size,
 		blurb,
 		points
@@ -46,16 +56,30 @@ function iso(id: Iso['id'], label: string, size: string, blurb: string, points: 
 }
 
 export const ISOS: Iso[] = [
-	iso('base', 'Base', '2.3 GiB', 'Desktop and core apps. The rest comes from the network.', [
-		'Optional app groups are picked in the installer and downloaded during install',
-		'Offline install? The picks are installed by the first-boot service once online',
-		'Flatpaks and AppImages are fetched on first boot'
-	]),
-	iso('full', 'Full', '9.3 GiB', 'Everything on the disc. Installs without a network.', [
-		'Offline package pool for every optional app group',
-		'Flatpaks preinstalled, AppImages and OpenRA content bundled',
-		'Extra opt-in group: voice dictation (VoxType)'
-	])
+	iso(
+		'base',
+		'Base',
+		'2.47 GB',
+		'36567093a0986383e101679e1e6dead5b4321305bafd269749b1c32dd109257f',
+		'Desktop and core apps. The rest comes from the network.',
+		[
+			'Optional app groups are picked in the installer and downloaded during install',
+			'Offline install? The picks are installed by the first-boot service once online',
+			'Flatpaks and AppImages are fetched on first boot'
+		]
+	),
+	iso(
+		'full',
+		'Full',
+		'8.87 GB',
+		'ad4a51a29a8d45feeb4cca84db374b1b888d01ca25f1b04d21a62d493bc2e01a',
+		'Everything on the disc. Installs without a network.',
+		[
+			'Offline package pool for every optional app group',
+			'Flatpaks preinstalled, AppImages and OpenRA content bundled',
+			'Extra opt-in group: voice dictation (VoxType)'
+		]
+	)
 ];
 
 export const OS_REQUIREMENTS =
