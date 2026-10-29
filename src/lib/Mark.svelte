@@ -18,8 +18,9 @@
 	class={klass}
 	viewBox="0 0 120 120"
 	xmlns="http://www.w3.org/2000/svg"
-	role="img"
-	aria-label={title}
+	role={title ? 'img' : undefined}
+	aria-label={title || undefined}
+	aria-hidden={title ? undefined : 'true'}
 	fill="none"
 >
 	<defs>

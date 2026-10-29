@@ -1,6 +1,6 @@
 // Shared content for the Omaxian landing pages.
 // Sourced from github.com/aozora/omaxian (README, install-scripts.md,
-// community-plugins/README.md). Last synced: 2026-10-18.
+// community-plugins/README.md, Omarchy v4.5.0-rc2 port). Last synced: 2026-10-29.
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
@@ -8,6 +8,19 @@ export const OMARCHY = 'https://omarchy.org';
 export const QUICKSHELL = 'https://quickshell.org';
 export const QUICKSHELL_INSTALL = 'https://quickshell.org/docs/guide/install/';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
+
+/** Shell release from the omaxian repo `version` file. */
+export const SHELL_VERSION = '1.0.5';
+
+/** Upstream Omarchy tag this shell tracks. */
+export const OMARCHY_VERSION = '4.5.0-rc2';
+
+// Site-wide (index page): the two ways to get Omaxian.
+export const SITE_TAGLINE =
+	'The Omarchy desktop on X11 — as a shell for your Debian, or as a whole OS';
+
+export const SITE_PITCH =
+	'Omaxian carries the Omarchy shell to X11 / XLibre and i3, without Wayland or systemd. Install it as a shell on the Debian-family system you already run, or boot Omaxian OS, a Devuan-based distribution that ships it as the default desktop.';
 
 export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X11 / XLibre + i3';
 
@@ -49,7 +62,7 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Settings',
 		key: 'Super+Ctrl+S',
-		blurb: 'Bar, dock, fonts and startup apps in a real window — no config files.'
+		blurb: 'Bar, dock, fonts, keyboard layouts and startup apps in a real window — no config files.'
 	},
 	{
 		title: 'Dock',
@@ -59,6 +72,14 @@ export const FEATURES: Feature[] = [
 		title: 'Display profiles',
 		key: 'Super+Ctrl+D',
 		blurb: 'Resolution, position and on/off per monitor, saved per layout.'
+	},
+	{
+		title: 'Agents',
+		blurb: 'Bar meter and panel for AI coding subscriptions — limits, balances and local stats across major providers.'
+	},
+	{
+		title: 'Languages',
+		blurb: 'Switch the shell UI among 50 languages; strings reload without restarting Quickshell.'
 	},
 	{
 		title: 'Media widget',
@@ -135,7 +156,7 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		label: 'Omamail',
 		upstream: 'huacnlee/omamail',
 		href: 'https://github.com/huacnlee/omamail',
-		blurb: 'Gmail / HEY / JMAP / IMAP email client with a Rust backend.'
+		blurb: 'Gmail, HEY, JMAP and IMAP in a Rust-backed client — bar toggle or mailto: handoff.'
 	},
 	{
 		id: 'io.github.adamcbrewer.voxtype-aura',
@@ -156,7 +177,7 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		label: 'Omastorm',
 		upstream: 'wesleygrimes/omastorm',
 		href: 'https://github.com/wesleygrimes/omastorm',
-		blurb: 'Live NEXRAD / OPERA weather radar in a native shell window.'
+		blurb: 'Live NEXRAD and OPERA radar in a native window (engine fetched on first open).'
 	},
 	{
 		id: 'io.github.kristoferlund.webcam',
@@ -180,7 +201,7 @@ export const INSTALL_ONESHOT: string[] = [
 ];
 
 export const QUICKSHELL_NOTE =
-	'The shell needs Quickshell ≥ 0.2. Debian 13+ has it in apt; on older Debian or Devuan, build it from source.';
+	'The shell needs Quickshell ≥ 0.2 (0.3.x tested). Debian 13+ usually gets it from apt; on older Debian or Devuan without that, build from source.';
 
 export interface Shot {
 	src: string;
@@ -223,5 +244,15 @@ export const CREDITS = [
 		label: 'i3 base config',
 		by: 'derived from Archcraft',
 		href: 'https://github.com/archcraft-os/archcraft-i3wm'
+	},
+	{
+		label: 'Devuan',
+		by: 'the systemd-free Debian that Omaxian OS is built on',
+		href: 'https://www.devuan.org'
+	},
+	{
+		label: 'XLibre',
+		by: 'the X server shipped by Omaxian OS',
+		href: 'https://github.com/X11Libre/xserver'
 	}
 ];
