@@ -3,7 +3,7 @@
 	import Banner from '#lib/Banner.svelte';
 	import Seo from '#lib/Seo.svelte';
 	import { resolve } from '$app/paths';
-	import { SITE_TAGLINE, SITE_PITCH, TESTED_ON, INSTALL_ONESHOT } from '#lib/omaxian';
+	import { SITE_TAGLINE, SITE_PITCH, TESTED_ON, INSTALL_ONESHOT, SHELL_VERSION } from '#lib/omaxian';
 	import { OS_VERSION, OS_CODENAME, OS_BASE } from '#lib/os';
 
 	const products = [
@@ -14,6 +14,7 @@
 			lead: 'For the system you already have.',
 			points: [
 				'Bar, dock, menu, themes and omarchy-* commands on i3',
+				'AI agent usage meter and 50 UI languages',
 				`Tested on ${TESTED_ON.join(', ')}`,
 				'One command to install, log out and back in'
 			],
@@ -51,7 +52,7 @@
 				{#each products as p (p.id)}
 					<a class="product" href={p.href}>
 						<span class="badge">
-							{#if p.id === 'os'}{OS_VERSION} · {OS_CODENAME}{:else}shell{/if}
+							{#if p.id === 'os'}{OS_VERSION} · {OS_CODENAME}{:else}v{SHELL_VERSION}{/if}
 						</span>
 						<h2>{p.name}</h2>
 						<p class="lead">{p.lead}</p>

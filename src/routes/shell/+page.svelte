@@ -21,6 +21,8 @@
 		QUICKSHELL_NOTE,
 		QUICKSHELL_INSTALL,
 		SHOTS,
+		SHELL_VERSION,
+		OMARCHY_VERSION,
 		type Shot
 	} from '#lib/omaxian';
 
@@ -54,9 +56,10 @@
 	<section class="hero full-bleed">
 		<div class="hero-bg" aria-hidden="true"></div>
 		<div class="hero-inner">
-			<p class="eyebrow">Omaxian Shell</p>
+			<p class="eyebrow">Omaxian Shell · v{SHELL_VERSION}</p>
 			<h1 class="title">The shell, for the Debian you <span class="x">already run</span></h1>
 			<p class="tagline">{TAGLINE}</p>
+			<p class="req">Tracks Omarchy {OMARCHY_VERSION}.</p>
 
 			<div class="term install">
 				<div class="term-top">
