@@ -1,6 +1,6 @@
 // Shared content for the Omaxian landing pages.
 // Sourced from github.com/aozora/omaxian (README, install-scripts.md,
-// community-plugins/README.md, Omarchy v4.5.0-rc2 port). Last synced: 2026-10-29.
+// community-plugins/README.md, Omarchy v4.5.0-rc2 port). Last synced: 2026-10-31.
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
@@ -192,6 +192,20 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		upstream: 'AlexZeitler/omarchy-yt-dlp-plugin',
 		href: 'https://github.com/AlexZeitler/omarchy-yt-dlp-plugin',
 		blurb: 'Download queue for yt-dlp — paste a link, pick video or audio, run from the bar.'
+	},
+	{
+		id: 'mirecad.omakeepick',
+		label: 'OmaKeePick',
+		upstream: 'mirecad/omakeepick',
+		href: 'https://github.com/mirecad/omakeepick',
+		blurb: 'KeePass picker with Rust daemon — search a KDBX, auto-type or copy, lock state on the bar.'
+	},
+	{
+		id: 'akshar.radio-atlas',
+		label: 'Radio Atlas',
+		upstream: 'AksharP5/omarchy-radio-atlas',
+		href: 'https://github.com/AksharP5/omarchy-radio-atlas',
+		blurb: 'World radio on a rotatable globe — play stations through the shell media controls.'
 	}
 ];
 
