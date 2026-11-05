@@ -14,6 +14,8 @@
 		FEATURES,
 		COMMUNITY_PLUGINS,
 		COMMUNITY_PLUGINS_DIR,
+		COMMUNITY_APPS,
+		COMMUNITY_APPS_DIR,
 		INSTALL_ONESHOT,
 		REQUIREMENTS,
 		TESTED_ON,
@@ -137,6 +139,9 @@
 			<a href={COMMUNITY_PLUGINS_DIR} target="_blank" rel="noreferrer">
 				<GithubIcon class="gh-icon" /> Browse community plugins →
 			</a>
+			<a href={COMMUNITY_APPS_DIR} target="_blank" rel="noreferrer">
+				<GithubIcon class="gh-icon" /> Browse community apps →
+			</a>
 			<a href={DOCS} target="_blank" rel="noreferrer"
 				>All features and known differences from Omarchy →</a
 			>
@@ -158,6 +163,26 @@
 					<div>
 						<b><a href={p.href} target="_blank" rel="noreferrer">{p.label}</a></b>
 						<span class="desc">{p.blurb}</span>
+					</div>
+				</li>
+			{/each}
+		</ul>
+	</section>
+
+	<!-- ============ COMMUNITY APPS ============ -->
+	<section class="block-centered">
+		<h2 class="rule">Community apps</h2>
+		<p class="intro">
+			Standalone ports — GTK, Qt and the like — not Quickshell plugins and not part of the default
+			install. Each app ships its own <code>install.sh</code>.
+		</p>
+		<ul class="feats">
+			{#each COMMUNITY_APPS as app (app.id)}
+				<li>
+					<span class="bullet">▸</span>
+					<div>
+						<b><a href={app.href} target="_blank" rel="noreferrer">{app.label}</a></b>
+						<span class="desc">{app.blurb}</span>
 					</div>
 				</li>
 			{/each}

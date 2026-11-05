@@ -1,6 +1,7 @@
 // Shared content for the Omaxian landing pages.
 // Sourced from github.com/aozora/omaxian (README, install-scripts.md,
-// community-plugins/README.md, Omarchy v4.5.0-rc2 port). Last synced: 2026-10-31.
+// community-plugins/README.md, community-apps/README.md, Omarchy v4.5.0 port).
+// Last synced: 2026-11-05.
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
@@ -8,12 +9,13 @@ export const OMARCHY = 'https://omarchy.org';
 export const QUICKSHELL = 'https://quickshell.org';
 export const QUICKSHELL_INSTALL = 'https://quickshell.org/docs/guide/install/';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
+export const COMMUNITY_APPS_DIR = `${REPO}/tree/main/community-apps`;
 
 /** Shell release from the omaxian repo `version` file. */
-export const SHELL_VERSION = '1.0.5';
+export const SHELL_VERSION = '1.0.8';
 
 /** Upstream Omarchy tag this shell tracks. */
-export const OMARCHY_VERSION = '4.5.0-rc2';
+export const OMARCHY_VERSION = '4.5.0';
 
 // Site-wide (index page): the two ways to get Omaxian.
 export const SITE_TAGLINE =
@@ -44,7 +46,7 @@ export const UBUNTU_NOTE =
 
 export const REQUIREMENTS = 'An X11 session with i3. Log out and back in after installing.';
 
-/** Full docs, install variants, community plugins and caveats live in the repo. */
+/** Full docs, install variants, community plugins, community apps and caveats live in the repo. */
 export const DOCS = `${REPO}/tree/main/docs/omaxian`;
 
 export interface Feature {
@@ -75,7 +77,8 @@ export const FEATURES: Feature[] = [
 	},
 	{
 		title: 'Agents',
-		blurb: 'Bar meter and panel for AI coding subscriptions — limits, balances and local stats across major providers.'
+		blurb:
+			'Bar meter and panel for AI coding subscriptions — limits, balances and local stats across major providers.'
 	},
 	{
 		title: 'Languages',
@@ -88,6 +91,11 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Community plugins',
 		blurb: 'Opt-in weather, calculator, email and more — each checked with omarchy-plugin-check.'
+	},
+	{
+		title: 'Community apps',
+		blurb:
+			'Standalone ports — Meeting Recorder, Monologue, Signed and Disktree — their own process and launcher, not shell plugins.'
 	}
 ];
 
@@ -198,7 +206,8 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		label: 'OmaKeePick',
 		upstream: 'mirecad/omakeepick',
 		href: 'https://github.com/mirecad/omakeepick',
-		blurb: 'KeePass picker with Rust daemon — search a KDBX, auto-type or copy, lock state on the bar.'
+		blurb:
+			'KeePass picker with Rust daemon — search a KDBX, auto-type or copy, lock state on the bar.'
 	},
 	{
 		id: 'akshar.radio-atlas',
@@ -206,6 +215,51 @@ export const COMMUNITY_PLUGINS: CommunityPlugin[] = [
 		upstream: 'AksharP5/omarchy-radio-atlas',
 		href: 'https://github.com/AksharP5/omarchy-radio-atlas',
 		blurb: 'World radio on a rotatable globe — play stations through the shell media controls.'
+	}
+];
+
+export interface CommunityApp {
+	id: string;
+	label: string;
+	upstream: string;
+	href: string;
+	blurb: string;
+}
+
+// Standalone apps. Not installed by scripts/setup.sh, install.sh, or deploy.sh.
+// Each directory ships its own install.sh.
+export const COMMUNITY_APPS: CommunityApp[] = [
+	{
+		id: 'omarchy-meeting-recorder',
+		label: 'Meeting Recorder',
+		upstream: 'jankeesvw/omarchy-meeting-recorder',
+		href: 'https://github.com/jankeesvw/omarchy-meeting-recorder',
+		blurb:
+			'GTK 4 recorder — mic and system audio as two tracks, local whisper.cpp transcription, optional waveform on the bar.'
+	},
+	{
+		id: 'monologue',
+		label: 'Monologue',
+		upstream: 'omacom/monologue',
+		href: 'https://github.com/omacom/monologue',
+		blurb:
+			'Qt Quick webcam recorder — pick a camera and mic, Space to record, then trim and save an H.264 MP4.'
+	},
+	{
+		id: 'signed',
+		label: 'Signed',
+		upstream: 'omacom/signed',
+		href: 'https://github.com/omacom/signed',
+		blurb:
+			'Qt Quick PDF signer — place a signature, text, or a date, and save a copy. Optional self-signed seal.'
+	},
+	{
+		id: 'disktree',
+		label: 'Disktree',
+		upstream: 'tobi/disktree',
+		href: 'https://github.com/tobi/disktree',
+		blurb:
+			'GPUI treemap of what fills a disk — local directories and SSH hosts, with a review before anything is removed.'
 	}
 ];
 
