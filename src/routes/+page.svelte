@@ -3,7 +3,13 @@
 	import Banner from '#lib/Banner.svelte';
 	import Seo from '#lib/Seo.svelte';
 	import { resolve } from '$app/paths';
-	import { SITE_TAGLINE, SITE_PITCH, TESTED_ON, INSTALL_ONESHOT, SHELL_VERSION } from '#lib/omaxian';
+	import {
+		SITE_TAGLINE,
+		SITE_PITCH,
+		TESTED_ON,
+		INSTALL_ONESHOT,
+		SHELL_VERSION
+	} from '#lib/omaxian';
 	import { OS_VERSION, OS_CODENAME, OS_BASE } from '#lib/os';
 
 	const products = [
@@ -29,6 +35,7 @@
 			points: [
 				`Based on ${OS_BASE}: sysvinit, no systemd`,
 				'Omaxian as the default desktop, XFCE as an alternative',
+				'Strata, Meeting Recorder, Monologue, Signed and Disktree',
 				'Live USB and Calamares installer, BIOS and UEFI'
 			],
 			cmd: null,
@@ -103,7 +110,7 @@
 						<tr>
 							<th scope="row">Apps</th>
 							<td>Yours, untouched</td>
-							<td>A curated set, plus optional groups at install</td>
+							<td>Strata and the community apps, plus optional groups</td>
 						</tr>
 						<tr>
 							<th scope="row">Get it</th>

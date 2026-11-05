@@ -1,6 +1,7 @@
 // Shared content for the Omaxian OS page.
 // Sourced from github.com/aozora/omaxian-os (README, config/, docs/test-report-0.1.md).
-// Last synced: 2026-10-29 — ISO sizes and sha256 digests for 0.1.
+// Last synced: 2026-11-05 — ISO sizes and sha256 digests for 0.1.
+// Strata and the four community apps ship with the desktop.
 
 import type { Shot } from '#lib/omaxian';
 
@@ -106,6 +107,11 @@ export const OS_FEATURES: OsFeature[] = [
 		blurb: 'Omaxian with Omarchy vendored is the default session. XFCE is there as an alternative.'
 	},
 	{
+		title: 'Strata and community apps',
+		blurb:
+			'Strata is the file manager. Meeting Recorder, Monologue, Signed and Disktree are installed with the desktop.'
+	},
+	{
 		title: 'XLibre and PipeWire',
 		blurb: 'XLibre X server, PipeWire per user and kernel 7.2 from excalibur-backports.'
 	},
@@ -134,11 +140,15 @@ export interface AppGroup {
 export const OS_APPS: AppGroup[] = [
 	{
 		title: 'Always installed',
-		note: 'From Devuan and extrepo',
+		note: 'Installed by default',
 		apps: [
+			'Strata file manager',
+			'Meeting Recorder',
+			'Monologue',
+			'Signed',
+			'Disktree',
 			'Brave',
 			'LibreWolf',
-			'Strata file manager',
 			'KeePassXC',
 			'VLC and mpv',
 			'qBittorrent',
