@@ -1,7 +1,7 @@
 // Shared content for the Omaxian landing pages.
 // Sourced from github.com/aozora/omaxian (README, install-scripts.md,
 // community-plugins/README.md, community-apps/README.md, Omarchy v4.5.0 port).
-// Last synced: 2026-11-05.
+// Last synced: 2026-11-05 — shell badge v1.1 (ISO-published shell).
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
@@ -11,8 +11,8 @@ export const QUICKSHELL_INSTALL = 'https://quickshell.org/docs/guide/install/';
 export const COMMUNITY_PLUGINS_DIR = `${REPO}/tree/main/community-plugins`;
 export const COMMUNITY_APPS_DIR = `${REPO}/tree/main/community-apps`;
 
-/** Shell release from the omaxian repo `version` file. */
-export const SHELL_VERSION = '1.0.8';
+/** Shell release tag published in the OS ISOs (omaxian v1.1; repo version file may lag). */
+export const SHELL_VERSION = '1.1';
 
 /** Upstream Omarchy tag this shell tracks. */
 export const OMARCHY_VERSION = '4.5.0';
