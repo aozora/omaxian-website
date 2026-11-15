@@ -1,7 +1,8 @@
 // Shared content for the Omaxian landing pages.
 // Sourced from github.com/aozora/omaxian (README, install-scripts.md,
 // community-plugins/README.md, community-apps/README.md, Omarchy v4.5.0 port).
-// Last synced: 2026-11-05 — shell badge v1.1 (ISO-published shell).
+// Last synced: 2026-11-14 — community-apps from omaxian `dev` (Plain, Omacalc,
+// Omacut, Omawrite, Folio); shell badge v1.1 (ISO-published).
 
 export const REPO = 'https://github.com/aozora/omaxian';
 export const LATEST_RELEASE = 'https://github.com/aozora/omaxian/releases/latest';
@@ -95,7 +96,7 @@ export const FEATURES: Feature[] = [
 	{
 		title: 'Community apps',
 		blurb:
-			'Standalone ports — Meeting Recorder, Monologue, Signed and Disktree — their own process and launcher, not shell plugins.'
+			'Standalone ports — recorders, editors, calculator, Folio and more — their own process and launcher, not shell plugins.'
 	}
 ];
 
@@ -260,6 +261,43 @@ export const COMMUNITY_APPS: CommunityApp[] = [
 		href: 'https://github.com/tobi/disktree',
 		blurb:
 			'GPUI treemap of what fills a disk — local directories and SSH hosts, with a review before anything is removed.'
+	},
+	{
+		id: 'plain',
+		label: 'Plain',
+		upstream: 'omacom/plain',
+		href: 'https://github.com/omacom/plain',
+		blurb:
+			'Qt Quick config/text editor — one file, Omarchy theme, careful saves. Can be set as the default editor.'
+	},
+	{
+		id: 'omacalc',
+		label: 'Omacalc',
+		upstream: 'omacom/omacalc',
+		href: 'https://github.com/omacom/omacalc',
+		blurb: 'Simple calculator that follows the Omarchy theme and text size.'
+	},
+	{
+		id: 'omacut',
+		label: 'Omacut',
+		upstream: 'omacom/omacut',
+		href: 'https://github.com/omacom/omacut',
+		blurb: 'Qt Quick video trimmer — trim, split and reorder clips, then export MP4 with ffmpeg.'
+	},
+	{
+		id: 'omawrite',
+		label: 'Omawrite',
+		upstream: 'omacom/omawrite',
+		href: 'https://github.com/omacom/omawrite',
+		blurb: 'Markdown writing app with auto-save, find/replace, print, and Omarchy theme.'
+	},
+	{
+		id: 'folio',
+		label: 'Folio',
+		upstream: 'omacom/folio',
+		href: 'https://github.com/omacom/folio',
+		blurb:
+			'Qt Quick file manager — grid, list and columns, Space previews, trash and drives, Omarchy theme.'
 	}
 ];
 
