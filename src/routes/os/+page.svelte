@@ -15,6 +15,7 @@
 		OS_SCOPE,
 		ISOS,
 		OS_REQUIREMENTS,
+		OS_SHA256SUMS_HREF,
 		OS_VERIFY,
 		OS_FEATURES,
 		OS_APPS,
@@ -113,7 +114,8 @@
 			<h2 class="rule">Download</h2>
 			<p class="intro">
 				Two images of the same release. Both boot BIOS and UEFI, run a live session and install with
-				Calamares.
+				Calamares. A <code>.sha256</code> file sits next to each ISO, and
+				<a href={OS_SHA256SUMS_HREF}>SHA256SUMS</a> lists both.
 			</p>
 			<div class="isos">
 				{#each ISOS as iso (iso.id)}
@@ -136,6 +138,10 @@
 							>
 							<a class="sha" href={iso.sha256Href}>sha256</a>
 						</div>
+						<p class="digest">
+							<span class="digest-label">size</span>
+							<code class="digest-hash">{iso.bytesLabel}</code>
+						</p>
 						<p class="digest">
 							<span class="digest-label">sha256</span>
 							<code class="digest-hash">{iso.sha256}</code>

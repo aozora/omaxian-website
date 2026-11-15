@@ -1,20 +1,22 @@
 // Shared content for the Omaxian OS page.
-// Sourced from github.com/aozora/omaxian-os (README, config/, docs/test-report-0.1.md).
-// Last synced: 2026-11-09 — Round 16 ISO sizes and sha256 digests for 0.1 (shell v1.1).
-// Strata and the four community apps ship with the desktop.
+// Release metadata matches the published 0.2 images at download.omaxian.org/releases/0.2/.
+// Last synced: 2026-11-15 — Omaxian OS 0.2 “Space Cat” (shell v1.1.3, kernel 7.2.12).
+// All nine community apps ship with the desktop. The installer chooses Strata or Folio.
 
 import type { Shot } from '#lib/omaxian';
 
 export const OS_REPO = 'https://github.com/aozora/omaxian-os';
 
-export const OS_VERSION = '0.1';
-export const OS_CODENAME = 'Trans-Siberian Shaman';
+export const OS_VERSION = '0.2';
+export const OS_CODENAME = 'Space Cat';
+/** Filename slug for OS_CODENAME, as published in the ISO names. */
+const OS_CODENAME_SLUG = 'space-cat';
 export const OS_BASE = 'Devuan 6 “Excalibur”';
 
 export const OS_TAGLINE = 'A Devuan-based Linux distribution with Omaxian as the desktop';
 
 export const OS_PITCH =
-	'Omaxian OS is a ready-to-install system built on Devuan 6 “Excalibur”, with the Omaxian shell as the default session and opinionated defaults: no systemd, the XLibre X server, PipeWire, a recent kernel and a curated set of apps.';
+	'Omaxian OS is a ready-to-install system built on Devuan 6 “Excalibur”, with Omaxian shell v1.1.3 on i3 as the only session and opinionated defaults: no systemd, the XLibre X server, PipeWire, kernel 7.2.12 and a curated set of apps.';
 
 export const OS_SCOPE =
 	'Already running Debian, Devuan or Xubuntu? You only need the shell. Starting from a blank disk? This is the shortest way to the whole desktop.';
@@ -29,20 +31,35 @@ export interface Iso {
 	sha256Href: string;
 	/** Published sha256 digest of the ISO file. */
 	sha256: string;
+	/** Published size in bytes, grouped for display (for example "3,065,659,392 bytes"). */
+	bytesLabel: string;
+	/** Decimal gigabytes, rounded to two places from the published byte count. */
 	size: string;
 	blurb: string;
 	points: string[];
 }
 
+function formatBytes(bytes: number): string {
+	return `${bytes.toLocaleString('en-US')} bytes`;
+}
+
+function formatGigabytes(bytes: number): string {
+	return `${(bytes / 1_000_000_000).toFixed(2)} GB`;
+}
+
+function isoFile(id: Iso['id']): string {
+	return `omaxian-${id}-${OS_VERSION}-${OS_CODENAME_SLUG}-amd64.iso`;
+}
+
 function iso(
 	id: Iso['id'],
 	label: string,
-	size: string,
+	bytes: number,
 	sha256: string,
 	blurb: string,
 	points: string[]
 ): Iso {
-	const file = `omaxian-${id}-${OS_VERSION}-trans-siberian-shaman-amd64.iso`;
+	const file = isoFile(id);
 	return {
 		id,
 		label,
@@ -50,7 +67,8 @@ function iso(
 		href: `${DOWNLOAD_BASE}/${file}`,
 		sha256Href: `${DOWNLOAD_BASE}/${file}.sha256`,
 		sha256,
-		size,
+		bytesLabel: formatBytes(bytes),
+		size: formatGigabytes(bytes),
 		blurb,
 		points
 	};
@@ -60,8 +78,8 @@ export const ISOS: Iso[] = [
 	iso(
 		'base',
 		'Base',
-		'3.06 GB',
-		'66e87240f3452107e83e200cec8143fb9f884f2c348ff9c364fa6a99cab5d108',
+		3_065_659_392,
+		'45aeaef9ef2884c9932edd8407879786c2910b3ea5576f1a51dbd0e626c2b590',
 		'Desktop and core apps. The rest comes from the network.',
 		[
 			'Optional app groups are picked in the installer and downloaded during install',
@@ -72,8 +90,8 @@ export const ISOS: Iso[] = [
 	iso(
 		'full',
 		'Full',
-		'8.96 GB',
-		'ea82614f2149d128682b1716e9b3c0051b8e6547a77a46a7172e8939d6a0fa8a',
+		8_967_221_248,
+		'd0437b326d8f484cf4e0745b29d9608adcbdf0eec059d8f74d0551f5f366f5d8',
 		'Everything on the disc. Installs without a network.',
 		[
 			'Offline package pool for every optional app group',
@@ -86,10 +104,13 @@ export const ISOS: Iso[] = [
 export const OS_REQUIREMENTS =
 	'64-bit x86 PC (amd64), BIOS or UEFI, 2 GB RAM, 20 GB disk. Base ISO installs want a network.';
 
+/** Combined checksum file for every image in this release. */
+export const OS_SHA256SUMS_HREF = `${DOWNLOAD_BASE}/SHA256SUMS`;
+
 /** Shell steps to verify and flash a downloaded ISO. */
 export const OS_VERIFY: string[] = [
-	'sha256sum -c omaxian-base-0.1-trans-siberian-shaman-amd64.iso.sha256',
-	'sudo dd if=omaxian-base-0.1-trans-siberian-shaman-amd64.iso of=/dev/sdX bs=4M status=progress oflag=sync'
+	`sha256sum -c ${isoFile('base')}.sha256`,
+	`sudo dd if=${isoFile('base')} of=/dev/sdX bs=4M status=progress oflag=sync`
 ];
 
 export interface OsFeature {
@@ -104,16 +125,21 @@ export const OS_FEATURES: OsFeature[] = [
 	},
 	{
 		title: 'Omaxian desktop',
-		blurb: 'Omaxian with Omarchy vendored is the default session. XFCE is there as an alternative.'
+		blurb: 'Omaxian shell v1.1.3 on i3 is the only session. XFCE and Thunar are not included.'
 	},
 	{
-		title: 'Strata and community apps',
+		title: 'File manager and community apps',
 		blurb:
-			'Strata is the file manager. Meeting Recorder, Monologue, Signed and Disktree are installed with the desktop.'
+			'The installer has a page to choose the default file manager, Strata or Folio. All nine community apps are installed by default: Disktree, Folio, Monologue, Omacalc, Omacut, Meeting Recorder, Omawrite, Plain and Signed.'
 	},
 	{
 		title: 'XLibre and PipeWire',
-		blurb: 'XLibre X server, PipeWire per user and kernel 7.2 from excalibur-backports.'
+		blurb: 'XLibre X server, PipeWire per user and kernel 7.2.12.'
+	},
+	{
+		title: 'Laptop hardware',
+		blurb:
+			'thermald, sensors, Thunderbolt, Intel/SOF audio firmware, and newer firmware from backports.'
 	},
 	{
 		title: 'Live session and Calamares installer',
@@ -140,13 +166,18 @@ export interface AppGroup {
 export const OS_APPS: AppGroup[] = [
 	{
 		title: 'Always installed',
-		note: 'Installed by default',
+		note: 'Installed by default. The installer asks you to pick Strata or Folio as the file manager.',
 		apps: [
-			'Strata file manager',
-			'Meeting Recorder',
-			'Monologue',
-			'Signed',
+			'Strata',
 			'Disktree',
+			'Folio',
+			'Monologue',
+			'Omacalc',
+			'Omacut',
+			'Meeting Recorder',
+			'Omawrite',
+			'Plain',
+			'Signed',
 			'Brave',
 			'LibreWolf',
 			'KeePassXC',
@@ -184,7 +215,7 @@ export const OS_APPS: AppGroup[] = [
 			'Podman Desktop',
 			'GPU Screen Recorder',
 			'Obsidian',
-			'ONLYOFFICE',
+			'ONLYOFFICE (system titlebar)',
 			'LocalSend',
 			'RustDesk',
 			'Shotcut',

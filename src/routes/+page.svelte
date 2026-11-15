@@ -33,9 +33,9 @@
 			name: 'Omaxian OS',
 			lead: 'A whole distribution, ready to boot.',
 			points: [
-				`Based on ${OS_BASE}: sysvinit, no systemd`,
-				'Omaxian as the default desktop, XFCE as an alternative',
-				'Strata, Meeting Recorder, Monologue, Signed and Disktree',
+				`Based on ${OS_BASE}: sysvinit, no systemd, kernel 7.2.12`,
+				'Omaxian shell on i3 is the only session',
+				'Nine community apps; pick Strata or Folio in the installer',
 				'Live USB and Calamares installer, BIOS and UEFI'
 			],
 			cmd: null,
@@ -110,7 +110,7 @@
 						<tr>
 							<th scope="row">Apps</th>
 							<td>Yours, untouched</td>
-							<td>Strata and the community apps, plus optional groups</td>
+							<td>Nine community apps by default, plus optional groups</td>
 						</tr>
 						<tr>
 							<th scope="row">Get it</th>
