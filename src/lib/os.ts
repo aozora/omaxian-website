@@ -1,6 +1,6 @@
 // Shared content for the Omaxian OS page.
 // Sourced from github.com/aozora/omaxian-os (README, config/, docs/test-report-0.1.md).
-// Last synced: 2026-11-05 — ISO sizes and sha256 digests for 0.1.
+// Last synced: 2026-11-05 — Round 15 ISO sizes and sha256 digests for 0.1 (shell v1.1).
 // Strata and the four community apps ship with the desktop.
 
 import type { Shot } from '#lib/omaxian';
@@ -60,8 +60,8 @@ export const ISOS: Iso[] = [
 	iso(
 		'base',
 		'Base',
-		'2.47 GB',
-		'36567093a0986383e101679e1e6dead5b4321305bafd269749b1c32dd109257f',
+		'3.10 GB',
+		'7b1bf01cd0df7e692714a16958fa8e414e00a5ce123bd7e8022af328061ecb7d',
 		'Desktop and core apps. The rest comes from the network.',
 		[
 			'Optional app groups are picked in the installer and downloaded during install',
@@ -72,8 +72,8 @@ export const ISOS: Iso[] = [
 	iso(
 		'full',
 		'Full',
-		'8.87 GB',
-		'ad4a51a29a8d45feeb4cca84db374b1b888d01ca25f1b04d21a62d493bc2e01a',
+		'9.39 GB',
+		'88c29b28b4e07034d96161a6219da7f28f3cd795b9b2b491cc5aed3776b88d99',
 		'Everything on the disc. Installs without a network.',
 		[
 			'Offline package pool for every optional app group',
