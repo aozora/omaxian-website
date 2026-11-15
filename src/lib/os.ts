@@ -215,7 +215,7 @@ export const OS_APPS: AppGroup[] = [
 			'Podman Desktop',
 			'GPU Screen Recorder',
 			'Obsidian',
-			'ONLYOFFICE (system titlebar)',
+			'ONLYOFFICE',
 			'LocalSend',
 			'RustDesk',
 			'Shotcut',
