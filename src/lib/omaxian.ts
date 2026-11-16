@@ -228,7 +228,8 @@ export interface CommunityApp {
 }
 
 // Standalone apps. Not installed by scripts/setup.sh, install.sh, or deploy.sh.
-// Each directory ships its own install.sh.
+// Install via omaxian-install.sh TUI or scripts/install-community-apps.sh.
+// Each app's install.sh downloads a pinned binary by default; --from-source builds.
 export const COMMUNITY_APPS: CommunityApp[] = [
 	{
 		id: 'omarchy-meeting-recorder',
@@ -307,7 +308,7 @@ export const INSTALL_ONESHOT: string[] = [
 ];
 
 export const QUICKSHELL_NOTE =
-	'The shell needs Quickshell ≥ 0.2 (0.3.x tested). Debian 13+ usually gets it from apt; on older Debian or Devuan without that, build from source.';
+	'The shell needs Quickshell ≥ 0.2 (0.3.x tested). Debian 13+ usually gets it from backports; on older Debian or Devuan without that, build from source.';
 
 export interface Shot {
 	src: string;

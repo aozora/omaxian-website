@@ -174,7 +174,9 @@
 		<h2 class="rule">Community apps</h2>
 		<p class="intro">
 			Standalone ports — GTK, Qt and the like — not Quickshell plugins and not part of the default
-			install. Each app ships its own <code>install.sh</code>.
+			shell install. Pick them in the installer TUI, or run
+			<code>scripts/install-community-apps.sh</code>. Each app downloads a pinned binary by default,
+			or builds from source with <code>--from-source</code>.
 		</p>
 		<ul class="feats">
 			{#each COMMUNITY_APPS as app (app.id)}
