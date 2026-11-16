@@ -1,13 +1,13 @@
 // Shared content for the Omaxian OS page.
-// Release metadata matches the published 0.2 images at download.omaxian.org/releases/0.2/.
-// Last synced: 2026-11-15 — Omaxian OS 0.2 “Space Cat” (shell v1.1.3, kernel 7.2.12).
-// All nine community apps ship with the desktop. The installer chooses Strata or Folio.
+// Release metadata matches the published 0.2.1 images at download.omaxian.org/releases/0.2.1/.
+// Last synced: 2026-11-16 — Omaxian OS 0.2.1 “Space Cat” (shell v1.2.2, kernel 7.2.12).
+// All nine community apps ship from pinned pre-built binaries. The installer chooses Strata or Folio.
 
-import type { Shot } from '#lib/omaxian';
+import { SHELL_VERSION, type Shot } from '#lib/omaxian';
 
 export const OS_REPO = 'https://github.com/aozora/omaxian-os';
 
-export const OS_VERSION = '0.2';
+export const OS_VERSION = '0.2.1';
 export const OS_CODENAME = 'Space Cat';
 /** Filename slug for OS_CODENAME, as published in the ISO names. */
 const OS_CODENAME_SLUG = 'space-cat';
@@ -15,8 +15,7 @@ export const OS_BASE = 'Devuan 6 “Excalibur”';
 
 export const OS_TAGLINE = 'A Devuan-based Linux distribution with Omaxian as the desktop';
 
-export const OS_PITCH =
-	'Omaxian OS is a ready-to-install system built on Devuan 6 “Excalibur”, with Omaxian shell v1.1.3 on i3 as the only session and opinionated defaults: no systemd, the XLibre X server, PipeWire, kernel 7.2.12 and a curated set of apps.';
+export const OS_PITCH = `Omaxian OS is a ready-to-install system built on Devuan 6 “Excalibur”, with Omaxian shell v${SHELL_VERSION} on i3 as the only session and opinionated defaults: no systemd, the XLibre X server, PipeWire, kernel 7.2.12 and a curated set of apps.`;
 
 export const OS_SCOPE =
 	'Already running Debian, Devuan or Xubuntu? You only need the shell. Starting from a blank disk? This is the shortest way to the whole desktop.';
@@ -78,8 +77,8 @@ export const ISOS: Iso[] = [
 	iso(
 		'base',
 		'Base',
-		3_065_659_392,
-		'45aeaef9ef2884c9932edd8407879786c2910b3ea5576f1a51dbd0e626c2b590',
+		3_065_556_992,
+		'c39a5e25a3a3d096b77d1fc29b1901b49832325b5002367374d1a5ddbda4ee22',
 		'Desktop and core apps. The rest comes from the network.',
 		[
 			'Optional app groups are picked in the installer and downloaded during install',
@@ -90,8 +89,8 @@ export const ISOS: Iso[] = [
 	iso(
 		'full',
 		'Full',
-		8_967_221_248,
-		'd0437b326d8f484cf4e0745b29d9608adcbdf0eec059d8f74d0551f5f366f5d8',
+		8_966_062_080,
+		'0404e1d251f10af521bf2c78b6f2718be9e5ca22b68c71e453fa8c4ec2f4e543',
 		'Everything on the disc. Installs without a network.',
 		[
 			'Offline package pool for every optional app group',
@@ -125,12 +124,12 @@ export const OS_FEATURES: OsFeature[] = [
 	},
 	{
 		title: 'Omaxian desktop',
-		blurb: 'Omaxian shell v1.1.3 on i3 is the only session. XFCE and Thunar are not included.'
+		blurb: `Omaxian shell v${SHELL_VERSION} on i3 is the only session. XFCE and Thunar are not included.`
 	},
 	{
 		title: 'File manager and community apps',
 		blurb:
-			'The installer has a page to choose the default file manager, Strata or Folio. All nine community apps are installed by default: Disktree, Folio, Monologue, Omacalc, Omacut, Meeting Recorder, Omawrite, Plain and Signed.'
+			'The installer has a page to choose the default file manager, Strata or Folio. All nine community apps are installed by default from pinned pre-built binaries: Disktree, Folio, Monologue, Omacalc, Omacut, Meeting Recorder, Omawrite, Plain and Signed.'
 	},
 	{
 		title: 'XLibre and PipeWire',
@@ -220,6 +219,24 @@ export const OS_APPS: AppGroup[] = [
 			'RustDesk',
 			'Shotcut',
 			'OpenRA'
+		]
+	}
+];
+
+export interface OsReleaseNote {
+	version: string;
+	points: string[];
+}
+
+/** Newest first. Describes what changed in a point release; the rest of this file describes the current images. */
+export const OS_RELEASE_NOTES: OsReleaseNote[] = [
+	{
+		version: '0.2.1',
+		points: [
+			`Omaxian shell v${SHELL_VERSION}. 0.2 shipped shell v1.1.3. The codename is still Space Cat. Devuan packages are unchanged, and the kernel is still 7.2.12.`,
+			'All nine community apps install from pinned pre-built binaries: Disktree, Folio, Monologue, Omacalc, Omacut, Meeting Recorder, Omawrite, Plain and Signed.',
+			'Folio and Monologue run on Devuan 6’s Qt 6.8 without local patches, using the upstream pinned binaries.',
+			'The apt repository is still apt.omaxian.org, with omaxian-session 1.2.2-1 and omaxian-base 0.2.1.'
 		]
 	}
 ];

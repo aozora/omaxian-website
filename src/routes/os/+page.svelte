@@ -19,6 +19,7 @@
 		OS_VERIFY,
 		OS_FEATURES,
 		OS_APPS,
+		OS_RELEASE_NOTES,
 		OS_NOTES,
 		OS_SHOTS,
 		type Iso
@@ -106,6 +107,19 @@
 				</li>
 			{/each}
 		</ul>
+	</section>
+
+	<!-- ============ RELEASE NOTES ============ -->
+	<section class="block-centered">
+		<h2 class="rule">Release notes</h2>
+		{#each OS_RELEASE_NOTES as note (note.version)}
+			<h3 class="release-version">{note.version}</h3>
+			<ul class="caveats">
+				{#each note.points as point (point)}
+					<li>{point}</li>
+				{/each}
+			</ul>
+		{/each}
 	</section>
 
 	<!-- ============ DOWNLOAD ============ -->
@@ -198,6 +212,11 @@
 <style>
 	#download {
 		scroll-margin-top: 3.5rem;
+	}
+	.release-version {
+		margin: 0 0 0.35rem;
+		font-size: 1.05rem;
+		font-weight: 700;
 	}
 	.isos {
 		display: grid;
