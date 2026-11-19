@@ -22,8 +22,14 @@
 				<h3>{p.title}</h3>
 				<p class="text">{p.text}</p>
 				<ul class="facts">
-					{#each p.facts as fact (fact)}
-						<li>{fact}</li>
+					{#each p.facts as fact, i (i)}
+						{#if typeof fact === 'string'}
+							<li>{fact}</li>
+						{:else}
+							<li>
+								<a href={fact.href} target="_blank" rel="noreferrer">{fact.link}</a>{fact.text}
+							</li>
+						{/if}
 					{/each}
 				</ul>
 			</li>

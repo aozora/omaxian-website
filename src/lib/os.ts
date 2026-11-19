@@ -149,18 +149,6 @@ export const OS_FEATURES: OsFeature[] = [
 	}
 ];
 
-/** What the build writes to /usr/lib/os-release (scripts/build-packages.sh in omaxian-os). */
-export const OS_RELEASE_FILE: string[] = [
-	`PRETTY_NAME="Omaxian OS ${OS_VERSION} (${OS_CODENAME})"`,
-	'NAME="Omaxian OS"',
-	`VERSION_ID="${OS_VERSION}"`,
-	`VERSION_CODENAME="${OS_CODENAME_SLUG}"`,
-	'DEVUAN_CODENAME="excalibur"',
-	'DEBIAN_CODENAME="trixie"',
-	'ID=omaxian',
-	'ID_LIKE="devuan debian"'
-];
-
 export interface StackLayer {
 	layer: string;
 	what: string;
@@ -215,9 +203,6 @@ export const OS_STACK: StackLayer[] = [
 		note: 'Per-model kernel options are picked at boot from the machine’s SMBIOS data.'
 	}
 ];
-
-/** build-rootfs.sh refuses an image that ended up with any of these. */
-export const OS_REFUSED: string[] = ['systemd', 'PulseAudio', 'the Xorg server', 'Firefox'];
 
 export interface OsStep {
 	title: string;

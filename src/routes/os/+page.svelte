@@ -20,9 +20,7 @@
 		OS_SHA256SUMS_HREF,
 		OS_VERIFY,
 		OS_FEATURES,
-		OS_RELEASE_FILE,
 		OS_STACK,
-		OS_REFUSED,
 		OS_STEPS,
 		OS_OPTIONAL,
 		OS_FIT,
@@ -54,24 +52,21 @@
 	<!-- ============ HERO ============ -->
 	<section class="hero">
 		<div class="hero-bg" aria-hidden="true"></div>
-		<div class="wrap hero-grid">
-			<div class="hero-copy">
-				<p class="eyebrow">Omaxian OS <b>{OS_VERSION}</b> · “{OS_CODENAME}”</p>
-				<h1 class="display">A whole desktop on X11, with <em>no systemd</em></h1>
-				<p class="lede">
-					Omaxian OS is a Linux distribution built on {OS_BASE}. It boots into i3 with the Omaxian
-					shell, the Omarchy desktop carried over to X11, and it runs on sysvinit and the XLibre X
-					server.
-				</p>
-				<div class="cta">
-					<a class="btn primary" href="#download">Download {OS_VERSION}</a>
-					<a class="btn ghost" href={OS_REPO} target="_blank" rel="noreferrer">
-						<GithubIcon class="gh-icon" /> View on GitHub
-					</a>
-				</div>
-				<p class="req">{OS_REQUIREMENTS}</p>
+		<div class="wrap hero-copy">
+			<p class="eyebrow">Omaxian OS <b>{OS_VERSION}</b> · “{OS_CODENAME}”</p>
+			<h1 class="display">The Omarchy experience, for <em>Debian-based</em> Linux</h1>
+			<p class="lede">
+				Omarchy's bar, dock, menu, themes and keyboard-driven workflow, ready to boot on a
+				distribution built on {OS_BASE}. It runs i3 on the XLibre X server, with sysvinit and no
+				systemd, and installs from a live USB stick.
+			</p>
+			<div class="cta">
+				<a class="btn primary" href="#download">Download {OS_VERSION}</a>
+				<a class="btn ghost" href={OS_REPO} target="_blank" rel="noreferrer">
+					<GithubIcon class="gh-icon" /> View on GitHub
+				</a>
 			</div>
-			<CodeBlock label="/etc/os-release" lines={OS_RELEASE_FILE} plain class="release-file" />
+			<p class="req">{OS_REQUIREMENTS}</p>
 		</div>
 		<div class="wrap">
 			<figure class="shot">
@@ -96,14 +91,6 @@
 					Every layer is a named, deliberate choice. Read it top to bottom and you know the whole
 					system.
 				</p>
-				<div class="refused">
-					<p>The build stops if the image ends up containing any of these:</p>
-					<ul class="chips">
-						{#each OS_REFUSED as r (r)}
-							<li>{r}</li>
-						{/each}
-					</ul>
-				</div>
 			</div>
 			<ol class="stack">
 				{#each OS_STACK as s (s.layer)}
@@ -313,25 +300,14 @@
 
 <style>
 	/* ---- hero ---- */
-	.hero-grid {
-		display: grid;
-		gap: clamp(2rem, 1rem + 4vw, 4rem);
-		align-items: center;
-	}
-	@media (min-width: 60rem) {
-		.hero-grid {
-			grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-		}
+	.hero-copy .display {
+		max-width: 18ch;
 	}
 	.hero-copy .lede {
 		margin-top: 1.25rem;
 	}
 	.hero-copy .cta {
 		margin: 1.75rem 0 1rem;
-	}
-	.hero-grid :global(.release-file) {
-		background: color-mix(in srgb, var(--omx-plate-2) 82%, transparent);
-		backdrop-filter: blur(6px);
 	}
 	.shot {
 		/* the source is 1280px wide: don't stretch it past what stays sharp */
@@ -369,16 +345,6 @@
 			position: sticky;
 			top: calc(var(--omx-bar-h) + 2rem);
 		}
-	}
-	.refused {
-		margin-top: 1.75rem;
-		padding-left: 1rem;
-		border-left: 2px solid var(--omx-red);
-		font-size: 0.95rem;
-		color: var(--omx-mute);
-	}
-	.refused p {
-		margin: 0 0 0.6rem;
 	}
 	.stack {
 		position: relative;

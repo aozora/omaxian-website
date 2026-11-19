@@ -36,7 +36,8 @@ export interface Pillar {
 	name: string;
 	title: string;
 	text: string;
-	facts: string[];
+	/** Short mono notes under the card; `link` is rendered as a link before `text`. */
+	facts: Array<string | { link: string; href: string; text: string }>;
 }
 
 /** The four things Omaxian is made of. Order matters: it is the order of the stars
@@ -54,14 +55,17 @@ export const PILLARS: Pillar[] = [
 		name: 'i3wm',
 		title: 'Tiling that stays out of the way',
 		text: 'i3 manages the windows. The Omaxian shell draws the bar, dock, menu and panels around them with Quickshell.',
-		facts: ['Super+K lists every key binding', 'The only session on Omaxian OS']
+		facts: [
+			'Super+K lists every key binding',
+			{ link: 'bspwm', href: 'https://github.com/baskerville/bspwm', text: ' is planned' }
+		]
 	},
 	{
 		id: 'debian',
 		name: 'Debian-based',
 		title: 'apt underneath',
 		text: 'The shell is tested on Debian 13, Devuan Excalibur and Xubuntu 26. Omaxian OS is built on Devuan 6, so it has no systemd.',
-		facts: ['No dependency on any init system', 'Signed packages from apt.omaxian.org']
+		facts: ['No dependency on any init system', 'FreeBSD support is planned']
 	},
 	{
 		id: 'omarchy',
