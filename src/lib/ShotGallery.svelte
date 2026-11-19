@@ -3,7 +3,16 @@
 	import type { Shot } from '#lib/omaxian';
 	import type { Picture } from 'vite-imagetools';
 
-	let { shots, onopen }: { shots: Shot[]; onopen?: (shot: Shot) => void } = $props();
+	let {
+		shots,
+		onopen,
+		numbered = false
+	}: {
+		shots: Shot[];
+		onopen?: (shot: Shot) => void;
+		/** Show the shots as an ordered sequence, each with its step number. */
+		numbered?: boolean;
+	} = $props();
 
 	let activeShot = $state<Shot | null>(null);
 
@@ -22,8 +31,8 @@
 </script>
 
 <div class="shots">
-	{#each shots as s (s.src)}
-		<figure>
+	{#each shots as s, i (s.src)}
+		<figure class="reveal">
 			<button
 				type="button"
 				class="shot-btn"
@@ -38,7 +47,11 @@
 					decoding="async"
 				/>
 			</button>
-			<figcaption><b>{s.label}</b> — {s.desc}</figcaption>
+			<figcaption>
+				{#if numbered}<span class="step">{String(i + 1).padStart(2, '0')}</span>{/if}
+				<b>{s.label}</b>
+				<span class="desc">{s.desc}</span>
+			</figcaption>
 		</figure>
 	{/each}
 </div>
@@ -52,8 +65,8 @@
 <style>
 	.shots {
 		display: grid;
-		gap: 1.5rem;
-		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		gap: 1.75rem 1.25rem;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 	}
 	figure {
 		margin: 0;
@@ -65,18 +78,19 @@
 		border: 0;
 		background: none;
 		cursor: zoom-in;
-		border-radius: 8px;
+		border-radius: 12px;
 	}
 	.shot-btn :global(img) {
 		/* the source screenshots aren't all the same aspect ratio — crop them
 		   to one fixed box so every thumbnail in the grid lines up */
 		width: 100%;
+		height: auto;
 		aspect-ratio: 8 / 5;
 		object-fit: cover;
 		object-position: top;
 		display: block;
-		border: 1px solid color-mix(in srgb, var(--omx-bone) 14%, transparent);
-		border-radius: 8px;
+		border: 1px solid var(--omx-edge);
+		border-radius: 12px;
 		background: var(--omx-plate-2);
 		transition: border-color 0.15s ease;
 	}
@@ -85,11 +99,19 @@
 		border-color: var(--omx-accent);
 	}
 	figcaption {
-		margin-top: 0.6rem;
-		font-size: 0.85rem;
-		color: color-mix(in srgb, var(--omx-bone) 62%, transparent);
+		margin-top: 0.7rem;
+		font-size: 0.92rem;
+		line-height: 1.45;
 	}
-	figcaption b {
-		color: var(--omx-bone);
+	.step {
+		margin-right: 0.4rem;
+		font-family: var(--omx-mono);
+		font-size: 0.78rem;
+		color: var(--omx-accent);
+	}
+	.desc {
+		display: block;
+		margin-top: 0.1rem;
+		color: color-mix(in srgb, var(--omx-bone) 64%, transparent);
 	}
 </style>

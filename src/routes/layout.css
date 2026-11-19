@@ -3,46 +3,54 @@
 @plugin '@tailwindcss/typography';
 
 /* ---- Omaxian brand base -------------------------------------------------- */
-/* Constellation identity: teal on deep space, drawn from the oma·X·ian
-   wordmark, the x-swirl mark, and the "init freedom" wallpaper. */
+/* Constellation identity: the ground is the night sky of the default
+   wallpaper, teal is the glow around each star of the mark, and the red X is
+   the one in the oma·X·ian wordmark. */
 
 :root {
-	--omx-void: #04090c; /* deepest ground */
-	--omx-plate: #071417; /* main surface */
-	--omx-plate-2: #050f12; /* recessed surface */
-	--omx-panel: #0c2128; /* raised panel / card */
-	--omx-bone: #eafffb; /* cyan-white — primary text */
-	--omx-mute: #8fd8cd; /* muted teal — secondary text, etymology */
-	--omx-accent: #5fe6d8; /* primary accent — the constellation glow */
+	--omx-void: #0b0616; /* deepest ground — the wallpaper's foreground ridge */
+	--omx-plate: #110b22; /* main surface */
+	--omx-plate-2: #0d0819; /* recessed surface (terminals) */
+	--omx-panel: #191030; /* raised panel / card */
+	--omx-bone: #f1ecff; /* primary text */
+	--omx-mute: #b3a8d6; /* secondary text */
+	--omx-accent: #5fe6d8; /* star glow, links, primary actions */
 	--omx-accent-deep: #2f9e94;
-	--omx-line: #c8fff8; /* hairlines, the X strokes */
-	--omx-red: #d70a53; /* secondary accent / spark — the X, warnings, callouts */
+	--omx-line: #c8fff8; /* the X strokes in the mark */
+	--omx-red: #d70a53; /* the X — large glyphs and rules only, not body text */
+	--omx-pink: #ff7ab3; /* nebula glow — secondary accent that is safe for text */
+	--omx-violet: #8773b5; /* Nebula Ridge accent */
+	--omx-edge: color-mix(in srgb, var(--omx-bone) 13%, transparent); /* hairlines */
 	--omx-galaxy-blue: #343480;
 	--omx-galaxy-dark-blue: #2d1747;
 	--omx-galaxy-darker-blue: #190c2d;
 	--omx-galaxy-darkest-blue: #0b0616;
 
-	/* JetBrains Mono first — loaded via Google Fonts in app.html — with system
-	   monospace stacks as fallback while it loads (or if it fails to). The
-	   whole site is set in this one family; there is no separate sans stack. */
+	/* Sans carries headlines and prose. Mono is for commands, versions, labels
+	   and other facts. */
 	--omx-mono:
 		'JetBrains Mono', ui-monospace, 'Cascadia Code', 'SF Mono', 'Menlo', 'Consolas', monospace;
+	--omx-sans: 'Bricolage Grotesque', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+
+	--omx-bar-h: 3.25rem;
 	color-scheme: dark;
 }
 
 html {
 	background: var(--omx-void);
 	-webkit-text-size-adjust: 100%;
+	scroll-padding-top: calc(var(--omx-bar-h) + 1rem);
 }
 
 body {
 	margin: 0;
 	min-height: 100dvh;
-	/* transparent so a fixed z-index:-1 page backdrop (the wallpaper) shows;
-	   the html canvas already paints --omx-void behind everything */
+	/* transparent: the html canvas already paints --omx-void */
 	background: transparent;
 	color: var(--omx-bone);
-	font-family: var(--omx-mono);
+	font-family: var(--omx-sans);
+	font-size: 1.0625rem;
+	line-height: 1.6;
 	font-synthesis-weight: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -56,6 +64,12 @@ a {
 	color: inherit;
 }
 
+code,
+kbd,
+pre {
+	font-family: var(--omx-mono);
+}
+
 :focus-visible {
 	outline: 2px solid var(--omx-accent);
 	outline-offset: 3px;
@@ -64,4 +78,35 @@ a {
 ::selection {
 	background: var(--omx-accent);
 	color: var(--omx-void);
+}
+
+/* ---- page-to-page transition ------------------------------------------------ */
+/* Kept top-level: view-transition pseudo-elements hang off the root. The nav
+   has its own view-transition-name so it stays put while the page changes. */
+@media (prefers-reduced-motion: no-preference) {
+	::view-transition-old(root) {
+		animation: 0.16s ease-in both omx-ws-out;
+	}
+	::view-transition-new(root) {
+		animation: 0.22s ease-out both omx-ws-in;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}
+@keyframes omx-ws-out {
+	to {
+		opacity: 0;
+		translate: 0 -0.5rem;
+	}
+}
+@keyframes omx-ws-in {
+	from {
+		opacity: 0;
+		translate: 0 0.75rem;
+	}
 }

@@ -119,42 +119,153 @@ export interface OsFeature {
 
 export const OS_FEATURES: OsFeature[] = [
 	{
-		title: 'No systemd',
-		blurb: 'sysvinit, eudev and elogind. The build refuses an image that pulls systemd in.'
-	},
-	{
-		title: 'Omaxian desktop',
-		blurb: `Omaxian shell v${SHELL_VERSION} on i3 is the only session. XFCE and Thunar are not included.`
-	},
-	{
-		title: 'File manager and community apps',
+		title: 'Try it before you install it',
 		blurb:
-			'The installer has a page to choose the default file manager, Strata or Folio. All nine community apps are installed by default from pinned pre-built binaries: Disktree, Folio, Monologue, Omacalc, Omacut, Meeting Recorder, Omawrite, Plain and Signed.'
+			'The ISO boots into a full live session from a USB stick. Your disk is left alone until you start the installer.'
 	},
 	{
-		title: 'XLibre and PipeWire',
-		blurb: 'XLibre X server, PipeWire per user and kernel 7.2.12.'
-	},
-	{
-		title: 'Laptop hardware',
+		title: 'A graphical installer',
 		blurb:
-			'thermald, sensors, Thunderbolt, Intel/SOF audio firmware, and newer firmware from backports.'
-	},
-	{
-		title: 'Live session and Calamares installer',
-		blurb:
-			'Try it from USB, then install with encryption, LVM or btrfs. Boots and installs on BIOS and UEFI.'
+			'Calamares, with disk encryption, LVM or btrfs. It installs on BIOS and UEFI and sets up the matching GRUB.'
 	},
 	{
 		title: 'Pick your apps at install time',
 		blurb:
-			'Chromium, Thunderbird, graphics, Telegram, containers and virtualization are optional groups.'
+			'Chromium, Thunderbird, graphics, Telegram, containers and virtualization are optional groups. Untick what you don’t want.'
 	},
 	{
-		title: 'Branded end to end',
-		blurb: 'GRUB theme, Plymouth splash, LightDM greeter and wallpapers match the desktop.'
+		title: 'Strata or Folio',
+		blurb:
+			'The installer asks which file manager should be the default. Both stay installed, and omaxian-default-file-manager switches later.'
+	},
+	{
+		title: 'Laptop hardware, without systemd',
+		blurb:
+			'thermald, sensors, GPU switching and Thunderbolt get sysvinit scripts that stay idle when the hardware is absent. Intel, Cirrus and SOF audio firmware comes from backports.'
+	},
+	{
+		title: 'One look from boot to desktop',
+		blurb: 'GRUB theme, Plymouth splash, LightDM greeter and wallpapers all match the desktop.'
 	}
 ];
+
+/** What the build writes to /usr/lib/os-release (scripts/build-packages.sh in omaxian-os). */
+export const OS_RELEASE_FILE: string[] = [
+	`PRETTY_NAME="Omaxian OS ${OS_VERSION} (${OS_CODENAME})"`,
+	'NAME="Omaxian OS"',
+	`VERSION_ID="${OS_VERSION}"`,
+	`VERSION_CODENAME="${OS_CODENAME_SLUG}"`,
+	'DEVUAN_CODENAME="excalibur"',
+	'DEBIAN_CODENAME="trixie"',
+	'ID=omaxian',
+	'ID_LIKE="devuan debian"'
+];
+
+export interface StackLayer {
+	layer: string;
+	what: string;
+	note: string;
+}
+
+/** The system from what you see down to the firmware. */
+export const OS_STACK: StackLayer[] = [
+	{
+		layer: 'Apps',
+		what: 'Nine community apps, two browsers, and your picks',
+		note: 'Brave and LibreWolf by default. Optional groups are chosen in the installer.'
+	},
+	{
+		layer: 'Desktop',
+		what: `Omaxian shell v${SHELL_VERSION}`,
+		note: 'Bar, dock, menu, panels and themes from Omarchy, drawn with Quickshell.'
+	},
+	{
+		layer: 'Window manager',
+		what: 'i3',
+		note: 'The only session. There is no second desktop to fall back on, and no XFCE.'
+	},
+	{
+		layer: 'Display',
+		what: 'XLibre X server',
+		note: 'X11, not Wayland.'
+	},
+	{
+		layer: 'Audio',
+		what: 'PipeWire, per user',
+		note: 'No PulseAudio daemon.'
+	},
+	{
+		layer: 'Init',
+		what: 'sysvinit, eudev and elogind',
+		note: 'No systemd anywhere in the image.'
+	},
+	{
+		layer: 'Kernel',
+		what: 'Linux 7.2.12',
+		note: 'From excalibur-backports, along with newer firmware. Unprivileged BPF is off.'
+	},
+	{
+		layer: 'Base',
+		what: OS_BASE,
+		note: 'Debian trixie packages, managed with apt as usual.'
+	},
+	{
+		layer: 'Boot',
+		what: 'GRUB on BIOS and UEFI',
+		note: 'Per-model kernel options are picked at boot from the machine’s SMBIOS data.'
+	}
+];
+
+/** build-rootfs.sh refuses an image that ended up with any of these. */
+export const OS_REFUSED: string[] = ['systemd', 'PulseAudio', 'the Xorg server', 'Firefox'];
+
+export interface OsStep {
+	title: string;
+	text: string;
+}
+
+export const OS_STEPS: OsStep[] = [
+	{
+		title: 'Download and verify',
+		text: 'Pick an image above, then check it against its .sha256 file.'
+	},
+	{
+		title: 'Write it to a USB stick',
+		text: 'dd works, and so does any image writer you already use. 4 GB is enough for Base, 16 GB for Full.'
+	},
+	{
+		title: 'Boot, look around, install',
+		text: 'Start the live session and try the desktop. When you’re ready, the installer is in the menu.'
+	}
+];
+
+export interface TermLine {
+	cmd: string;
+	note?: string;
+}
+
+/** Adding optional groups and apps on an installed system. */
+export const OS_OPTIONAL: TermLine[] = [
+	{ cmd: 'omaxian-optional', note: 'interactive menu' },
+	{ cmd: 'omaxian-optional list', note: 'groups and AppImages, with status' },
+	{ cmd: 'omaxian-optional install containers shotcut' }
+];
+
+export const OS_FIT = {
+	yes: [
+		'You like tiling window managers, or want to try one that arrives already set up.',
+		'You want a Debian-family system without systemd.',
+		'You prefer X11 and the tools built around it.',
+		'You like the look of Omarchy but don’t run Arch or Wayland.',
+		'You’d rather boot a USB stick and look around before committing a disk.'
+	],
+	no: [
+		'You want Wayland and Hyprland. That is Omarchy itself.',
+		'Your machine isn’t a 64-bit x86 PC. There are no ARM images.',
+		'You rely on software that needs systemd.',
+		`You want a distribution with years behind it. This is version ${OS_VERSION}.`
+	]
+};
 
 export interface AppGroup {
 	title: string;
@@ -277,5 +388,10 @@ export const OS_SHOTS: Shot[] = [
 		src: '/src/lib/assets/os-shots/greeter.png',
 		label: 'Greeter',
 		desc: 'LightDM greeter, themed to match.'
+	},
+	{
+		src: '/src/lib/assets/os-shots/desktop.png',
+		label: 'Desktop',
+		desc: 'The installed system: the Omaxian shell on i3.'
 	}
 ];

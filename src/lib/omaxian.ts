@@ -25,6 +25,53 @@ export const SITE_TAGLINE =
 export const SITE_PITCH =
 	'Omaxian carries the Omarchy shell to X11 / XLibre and i3, without Wayland or systemd. Install it as a shell on the Debian-family system you already run, or boot Omaxian OS, a Devuan-based distribution that ships it as the default desktop.';
 
+/** The line printed on the default wallpaper. */
+export const EQUATION = ['omakase', 'x11', 'debian'];
+
+export const SITE_LEDE =
+	'The Omarchy desktop, carried over to X11 and i3 for Debian-family Linux. Add it to the system you already run, or boot the whole OS from a USB stick.';
+
+export interface Pillar {
+	id: string;
+	name: string;
+	title: string;
+	text: string;
+	facts: string[];
+}
+
+/** The four things Omaxian is made of. Order matters: it is the order of the stars
+    around the mark on the index page (top-left, top-right, bottom-left, bottom-right). */
+export const PILLARS: Pillar[] = [
+	{
+		id: 'x11',
+		name: 'X11 / XLibre',
+		title: 'An X server, on purpose',
+		text: 'Omarchy is built for Wayland and Hyprland. Omaxian carries the same desktop to X11 and runs on the X server you have, X.Org or XLibre.',
+		facts: ['No Wayland, no Hyprland', 'XLibre is the X server on Omaxian OS']
+	},
+	{
+		id: 'i3',
+		name: 'i3wm',
+		title: 'Tiling that stays out of the way',
+		text: 'i3 manages the windows. The Omaxian shell draws the bar, dock, menu and panels around them with Quickshell.',
+		facts: ['Super+K lists every key binding', 'The only session on Omaxian OS']
+	},
+	{
+		id: 'debian',
+		name: 'Debian-based',
+		title: 'apt underneath',
+		text: 'The shell is tested on Debian 13, Devuan Excalibur and Xubuntu 26. Omaxian OS is built on Devuan 6, so it has no systemd.',
+		facts: ['No dependency on any init system', 'Signed packages from apt.omaxian.org']
+	},
+	{
+		id: 'omarchy',
+		name: 'Omarchy port',
+		title: 'The Omarchy look and commands',
+		text: 'Bar, dock, menu, themes and the omarchy-* commands come from Omarchy by DHH and 37signals. X11 is not Wayland, so compatibility is partial.',
+		facts: [`Tracks Omarchy v${OMARCHY_VERSION}`, 'omarchy-plugin-check tests any Omarchy plugin']
+	}
+];
+
 export const TAGLINE = 'A port of the Omarchy shell to debian-based distros on X11 / XLibre + i3';
 
 export const PITCH =

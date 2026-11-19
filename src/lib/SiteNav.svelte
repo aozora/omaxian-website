@@ -2,10 +2,12 @@
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import Mark from '#lib/Mark.svelte';
+	import GithubIcon from '#lib/GithubIcon.svelte';
+	import { REPO } from '#lib/omaxian';
 
-	const tabs = [
-		{ href: resolve('/shell'), label: 'Shell' },
-		{ href: resolve('/os'), label: 'OS' }
+	const links = [
+		{ href: resolve('/os'), label: 'OS' },
+		{ href: resolve('/shell'), label: 'Shell' }
 	];
 </script>
 
@@ -15,14 +17,23 @@
 			<Mark class="nav-mark" title="" />
 			<span>oma<span class="x">x</span>ian</span>
 		</a>
-		<nav aria-label="Products">
-			{#each tabs as t (t.href)}
+		<nav aria-label="Main">
+			{#each links as l (l.href)}
 				<a
-					class="tab"
-					href={t.href}
-					aria-current={page.url.pathname.startsWith(t.href) ? 'page' : undefined}>{t.label}</a
+					class="link"
+					href={l.href}
+					aria-current={page.url.pathname.startsWith(l.href) ? 'page' : undefined}>{l.label}</a
 				>
 			{/each}
+			<a
+				class="link gh"
+				href={REPO}
+				target="_blank"
+				rel="noreferrer"
+				aria-label="Omaxian on GitHub"
+			>
+				<GithubIcon class="gh-icon" />
+			</a>
 		</nav>
 	</div>
 </header>
@@ -32,23 +43,25 @@
 		position: sticky;
 		top: 0;
 		z-index: 10;
-		background: color-mix(in srgb, var(--omx-void) 78%, transparent);
-		backdrop-filter: blur(8px);
-		border-bottom: 1px solid color-mix(in srgb, var(--omx-bone) 10%, transparent);
+		view-transition-name: site-nav;
+		background: color-mix(in srgb, var(--omx-void) 72%, transparent);
+		backdrop-filter: blur(10px);
+		border-bottom: 1px solid var(--omx-edge);
 	}
 	.nav-inner {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		max-width: 74rem;
-		margin: 0 auto;
-		padding: 0.55rem clamp(1rem, 4vw, 3rem);
+		width: min(100% - 2.5rem, 72rem);
+		min-height: var(--omx-bar-h);
+		margin-inline: auto;
 	}
 	.home {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.55rem;
+		font-family: var(--omx-mono);
 		font-weight: 700;
 		letter-spacing: 0.02em;
 		text-decoration: none;
@@ -57,28 +70,38 @@
 		color: var(--omx-red);
 	}
 	:global(.nav-mark) {
-		width: 1.6rem;
+		width: 1.7rem;
 		height: auto;
 	}
 	nav {
 		display: flex;
-		gap: 0.3rem;
+		align-items: center;
+		gap: 0.25rem;
 	}
-	.tab {
-		padding: 0.4rem 0.9rem;
-		font-size: 0.9rem;
-		font-weight: 640;
+	.link {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.35rem 0.85rem;
+		font-family: var(--omx-mono);
+		font-size: 0.88rem;
+		font-weight: 600;
 		text-decoration: none;
-		color: color-mix(in srgb, var(--omx-bone) 72%, transparent);
-		border: 1px solid transparent;
-		border-radius: 6px;
+		color: var(--omx-mute);
+		border-radius: 999px;
+		transition:
+			color 0.15s ease,
+			background-color 0.15s ease;
 	}
-	.tab:hover {
+	.link:hover {
 		color: var(--omx-bone);
-		border-color: color-mix(in srgb, var(--omx-bone) 22%, transparent);
+		background: color-mix(in srgb, var(--omx-bone) 8%, transparent);
 	}
-	.tab[aria-current='page'] {
+	.link[aria-current='page'] {
 		color: var(--omx-void);
 		background: var(--omx-accent);
+	}
+	.gh {
+		padding-inline: 0.6rem;
+		font-size: 1.1rem;
 	}
 </style>
