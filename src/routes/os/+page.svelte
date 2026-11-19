@@ -6,7 +6,6 @@
 	import { resolve } from '$app/paths';
 	import { PUBLIC_POSTHOG_PROJECT_TOKEN, PUBLIC_POSTHOG_HOST } from '$app/env/public';
 	import posthog from 'posthog-js';
-	import desktop from '#lib/assets/os-shots/desktop.png?enhanced';
 	import { OMARCHY, type Shot } from '#lib/omaxian';
 	import {
 		OS_REPO,
@@ -70,13 +69,14 @@
 		</div>
 		<div class="wrap">
 			<figure class="shot">
-				<enhanced:img
-					src={desktop}
-					alt="The installed Omaxian OS desktop: the bar across the top with workspaces, clock and status icons, over the default night-sky wallpaper."
-					sizes="(max-width: 60rem) 100vw, 960px"
+				<img
+					src="/omaxian-os.png"
+					alt="The Omaxian OS desktop tiled with default applications: a disk usage map, a card game, a video player, a calculator, a file manager, 3D chess, a camera, a writing app and a terminal, with the bar on top and the dock below."
+					width="2560"
+					height="1440"
 					fetchpriority="high"
 				/>
-				<figcaption>The installed system, a moment after login.</figcaption>
+				<figcaption>Omaxian with some of the default applications.</figcaption>
 			</figure>
 		</div>
 	</section>
@@ -310,7 +310,7 @@
 		margin: 1.75rem 0 1rem;
 	}
 	.shot {
-		/* the source is 1280px wide: don't stretch it past what stays sharp */
+		/* cap the width so the hero shot doesn't dominate wide screens */
 		max-width: 60rem;
 		margin: clamp(2.5rem, 2rem + 3vw, 4.5rem) auto 0;
 	}

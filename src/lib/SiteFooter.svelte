@@ -38,8 +38,8 @@
 		</div>
 	</div>
 	<div class="foot-inner legal">
-		<p>Omaxian is not affiliated with or endorsed by Omarchy, Devuan, or Debian.</p>
-		<p>© 2026 Marcello Palmitessa</p>
+		<p>Omaxian is not affiliated with or endorsed by Omarchy, Devuan, Debian or XLibre.</p>
+		<p>© {new Date().getFullYear()} Marcello Palmitessa</p>
 	</div>
 </footer>
 
